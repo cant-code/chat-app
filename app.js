@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const dotenv = require('dotenv');
 
+const users = require('./routes/users');
+const messages = require('./routes/messages');
+
 dotenv.config();
 const app = express();
 
@@ -35,6 +38,5 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello')
-});
+app.use('/api/users', users);
+app.use('/api/messages', messages);
