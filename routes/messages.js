@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-const key = process.env.SECRET;
+const secretOrPrivateKey = process.env.SECRET;
 const verify = require('../utils/verifyToken');
 const Message = require('../models/Message');
 const Convo = require('../models/Conversation');
@@ -13,7 +13,7 @@ let jwtUser = null;
 
 router.use(function(req, res, next) {
     try {
-        jwtUser = jwt.verify(verify(req), key);
+        jwtUser = jwt.verify(verify(req), secretOrPrivateKey);
         next();
     } catch(e) {
         console.log(e);

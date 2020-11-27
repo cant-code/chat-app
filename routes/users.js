@@ -3,8 +3,9 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-const key = process.env.SECRET;
+const secretOrPrivateKey = process.env.SECRET;
 const verify = require('../utils/verifyToken');
 const validateRegistration = require('../utils/register');
 const validateLogin = require('../utils/login');
@@ -12,7 +13,7 @@ const User = require('../models/User');
 
 router.get('/', (req, res) => {
     try {
-        let jwtUser = jwt.verify(verify(req), key);
+        let jwtUser = jwt.verify(verify(req), secretOrPrivateKey);
         let id = mongoose.Types.ObjectId(jwtUser.id);
 
         User.aggregate()
@@ -46,22 +47,22 @@ router.post('/register', (req, res) => {
         if(user) return res.status(400).json({ error: 'User already exists'});
         else {
             const newUser = new User({
-                name: req.body.name,
+                email: req.body.email,
                 username: req.body.username,
                 password: req.body.password,
             });
             bcrypt.genSalt(10, (err, salt) => {
-                bcrypt.hash(newUser.password, salt, (err, salt) => {
+                bcrypt.hash(newUser.password, salt, (err, hash) => {
                     if(err) throw err;
                     newUser.password = hash;
                     newUser.save().then(user => {
                         const payload = {
                             id: user.id,
-                            name: user.name
+                            email: user.email
                         };
                         jwt.sign(
                             payload,
-                            key,
+                            secretOrPrivateKey,
                             {
                                 expiresIn: 86400,
                             },
@@ -72,7 +73,7 @@ router.post('/register', (req, res) => {
                                     res.json({
                                         success: true,
                                         token: 'Bearer ' + token,
-                                        name: user.name
+                                        email: user.email
                                     });
                                 }
                             }
@@ -94,19 +95,19 @@ router.post('/login', (req, res) => {
             if(found) {
                 const payload = {
                     id: user.id,
-                    name: user.name
+                    email: user.email
                 };
                 jwt.sign(
                     payload,
-                    key,
+                    secretOrPrivateKey,
                     {
-                        expiresIn: 86400,
+                        expiresIn: 31556926,
                     },
                     (e, token) => {
                         res.json({
                             success: true,
                             token: 'Bearer ' + token,
-                            name: user.name,
+                            email: user.email,
                             username: user.username,
                             userId: user._id,
                         });

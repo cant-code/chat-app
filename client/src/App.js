@@ -1,22 +1,37 @@
+import React from 'react';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { Router, Route, Switch } from 'react-router-dom';
+// import Navbar from './components/Navbar';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import deepPurple from '@material-ui/core/colors/deepPurple';
+import cyan from '@material-ui/core/colors/cyan';
+import history from './utils/history';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    background: {
+      default: '#121212'
+    },
+    primary: cyan,
+    secondary: deepPurple,
+  }
+});
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ThemeProvider theme={theme}>
+      <CssBaseline/>
+      <Router history={history}>
+        <Switch>
+          <Route path='/' exact component={Login} />
+          <Route path='/register' exact component={Register} />
+        </Switch>
+      </Router>
+    </ThemeProvider>
+  )
 }
 
 export default App;
