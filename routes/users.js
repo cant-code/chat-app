@@ -64,7 +64,7 @@ router.post('/register', (req, res) => {
                             payload,
                             secretOrPrivateKey,
                             {
-                                expiresIn: 86400,
+                                expiresIn: 31556926,
                             },
                             (e, token) => {
                                 if(e) throw e;
@@ -73,7 +73,7 @@ router.post('/register', (req, res) => {
                                     res.json({
                                         success: true,
                                         token: 'Bearer ' + token,
-                                        email: user.email
+                                        username: user.username
                                     });
                                 }
                             }
