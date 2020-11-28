@@ -92,9 +92,9 @@ export default function Login() {
       }
     }
     if (validating) sendForm();
-  }, [validating, body, formErrors, setOpen, setType, setMsg, open]);
+  }, [validating, body, formErrors, open]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     handleValidation();
   };
@@ -247,13 +247,7 @@ export default function Login() {
           </div>
         </CardContent>
       </Card>
-      <SnackBar
-        message={msg}
-        status={Date.now()}
-        type={type}
-        setPropOpen={setOpen}
-        open={open}
-      />
+      <SnackBar message={msg} type={type} setPropOpen={setOpen} open={open} />
     </Container>
   );
 }

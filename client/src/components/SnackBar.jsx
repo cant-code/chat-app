@@ -21,13 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function DisplaySnackBar({
-  message,
-  status,
-  type,
-  setPropOpen,
-  open,
-}) {
+export default function DisplaySnackBar({ message, type, setPropOpen, open }) {
   const styles = useStyles();
 
   const handleClose = () => {

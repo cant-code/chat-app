@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -11,10 +11,11 @@ import Avatar from "@material-ui/core/Avatar";
 import TextField from "@material-ui/core/TextField";
 import Linking from "@material-ui/core/Link";
 import { Link } from "react-router-dom";
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import IconButton from "@material-ui/core/IconButton";
+import SnackBar from "../components/SnackBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,46 +42,68 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const classes = useStyles();
   const initialBodyState = {
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   };
 
   const [body, setBody] = useState(initialBodyState);
   const [formErrors, setFormErrors] = useState(initialBodyState);
   const [showPassword, setShowPassword] = useState(false);
+  const [validation, setValidation] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [type, setType] = useState("");
 
-  const handleSubmit = async (event) => {
+  useEffect(() => {
+    async function sendForm() {
+      if (!formErrors.username.length && !formErrors.password.length) {
+        const { username, password } = body;
+        const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        };
+        const res = await fetch(`/api/users/login`, requestOptions);
+        const data = await res.json();
+        setValidation(false);
+        if (res.status === 400 || res.status === 404) {
+          let str = "Error: " + data.Error;
+          setMsg(str);
+          setType("error");
+        } else {
+          setMsg("Successfully Logged In");
+          setType("success");
+        }
+        console.log(data);
+        if (!open) setOpen(true);
+        else {
+          setOpen(false);
+          setOpen(true);
+        }
+      }
+    }
+    if (validation) sendForm();
+  }, [validation, body, formErrors, open]);
+
+  const handleSubmit = (event) => {
     event.preventDefault();
     handleValidation();
-    if(!formErrors.username.length && !formErrors.password.length) {
-      const { username, password } = body;
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      };
-      const res = await fetch(`/api/users/login`, requestOptions);
-      const data = await res.json();
-      if(res.status === 400) console.log(data);
-      else console.log(data);
-    }
   };
 
   const handleValidation = () => {
     setFormErrors(initialBodyState);
-    const errors = {username: '', password: ''};
-    if(body.username.length === 0)
-      errors.username = "This field is required";
-    if(body.password.length === 0)
-      errors.password = "This field is required";
+    const errors = { username: "", password: "" };
+    if (body.username.length === 0) errors.username = "This field is required";
+    if (body.password.length === 0) errors.password = "This field is required";
     setFormErrors(errors);
+    setValidation(true);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBody({
       ...body,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -99,7 +122,12 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <form className={classes.form} noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <form
+              className={classes.form}
+              noValidate
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -127,16 +155,18 @@ export default function Login() {
                 onChange={handleChange}
                 error={formErrors.password.length > 0 ? true : false}
                 helperText={formErrors.password}
-                InputProps={{endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleShowPassword}
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                )}}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleShowPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button
                 type="submit"
@@ -158,10 +188,8 @@ export default function Login() {
             </form>
           </div>
         </CardContent>
-        {/* <CardActions>
-          <Button size="small">Learn More</Button>
-        </CardActions> */}
       </Card>
+      <SnackBar message={msg} type={type} setPropOpen={setOpen} open={open} />
     </Container>
   );
 }
