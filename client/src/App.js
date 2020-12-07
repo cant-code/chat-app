@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Router, Route, Switch } from 'react-router-dom';
-// import Navbar from './components/Navbar';
+import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -26,7 +26,8 @@ function App() {
       <CssBaseline/>
       <Router history={history}>
         <Switch>
-          <Route path='/' exact component={Login} />
+          <Route path='/' component={Home} />
+          <Route path='/login' exact component={Login} />
           <Route path='/register' exact component={Register} />
         </Switch>
       </Router>
