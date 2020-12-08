@@ -1,42 +1,11 @@
 import React from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
-import MuiListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import MuiAvatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
 import InboxIcon from "@material-ui/icons/Inbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
 import Typography from "@material-ui/core/Typography";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: 360,
-  },
-}));
-
-const ListItem = withStyles((theme) => ({
-  root: {
-    "&$selected": {
-      backgroundColor: theme.palette.primary.dark,
-      color: "white",
-    },
-    "&$selected:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  selected: {},
-}))(MuiListItem);
-
-const Avatar = withStyles({
-  root: {
-    backgroundColor: "white",
-  },
-})(MuiAvatar);
+import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
 export default function ListWrapper() {
   const classes = useStyles();
@@ -48,7 +17,7 @@ export default function ListWrapper() {
 
   return (
     <div className={classes.root}>
-      <Typography component="h1" variant="h2" align="center">
+      <Typography component="h2" variant="h3" align="center">
         Hello
       </Typography>
       <List component="nav" aria-label="main mailbox folders">
@@ -79,7 +48,6 @@ export default function ListWrapper() {
           <ListItemText primary="Drafts" secondary="08-12-2020" />
         </ListItem>
       </List>
-      <Divider />
       <List component="nav" aria-label="secondary mailbox folder">
         <ListItem
           button
