@@ -1,0 +1,11 @@
+html,
+body {
+  scrollbar-width: thin !important;
+}
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+  background-color: #00bcd4;
+}
