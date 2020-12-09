@@ -4,7 +4,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import InboxIcon from "@material-ui/icons/Inbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
-import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
 export default function ListWrapper() {
@@ -17,10 +17,12 @@ export default function ListWrapper() {
 
   return (
     <div className={classes.root}>
-      <Typography component="h2" variant="h3" align="center">
-        Hello
-      </Typography>
-      <List component="nav" aria-label="main mailbox folders">
+      <List
+        component="nav"
+        style={{ maxHeight: "77vh", paddingTop: 0, overflow: "auto" }}
+        aria-label="main mailbox folders"
+      >
+        <Divider />
         <ListItem
           button
           dense
@@ -34,6 +36,7 @@ export default function ListWrapper() {
           </ListItemAvatar>
           <ListItemText primary="Inbox" secondary="08-12-2020" />
         </ListItem>
+        <Divider />
         <ListItem
           button
           dense
@@ -47,8 +50,7 @@ export default function ListWrapper() {
           </ListItemAvatar>
           <ListItemText primary="Drafts" secondary="08-12-2020" />
         </ListItem>
-      </List>
-      <List component="nav" aria-label="secondary mailbox folder">
+        <Divider />
         <ListItem
           button
           dense
@@ -57,6 +59,7 @@ export default function ListWrapper() {
         >
           <ListItemText inset primary="Trash" secondary="08-12-2020" />
         </ListItem>
+        <Divider />
         <ListItem
           button
           dense
@@ -65,6 +68,61 @@ export default function ListWrapper() {
         >
           <ListItemText inset primary="Spam" secondary="08-12-2020" />
         </ListItem>
+        <Divider />
+        <ListItem
+          button
+          dense
+          selected={selectedIndex === 4}
+          onClick={() => handleListItemClick(4)}
+        >
+          <ListItemText inset primary="Spam" secondary="08-12-2020" />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          dense
+          selected={selectedIndex === 5}
+          onClick={() => handleListItemClick(5)}
+        >
+          <ListItemText inset primary="Spam" secondary="08-12-2020" />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          dense
+          selected={selectedIndex === 6}
+          onClick={() => handleListItemClick(6)}
+        >
+          <ListItemText inset primary="Spam" secondary="08-12-2020" />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          dense
+          selected={selectedIndex === 7}
+          onClick={() => handleListItemClick(7)}
+        >
+          <ListItemText inset primary="Spam" secondary="08-12-2020" />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          dense
+          selected={selectedIndex === 8}
+          onClick={() => handleListItemClick(8)}
+        >
+          <ListItemText inset primary="Spam" secondary="08-12-2020" />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          dense
+          selected={selectedIndex === 9}
+          onClick={() => handleListItemClick(9)}
+        >
+          <ListItemText inset primary="Spam" secondary="08-12-2020" />
+        </ListItem>
+        <Divider />
       </List>
     </div>
   );

@@ -4,7 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import ListWrapper from "../components/ListWrapper/ListWrapper";
+import ChatList from "../components/ChatList/ChatList";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +45,7 @@ export default function Home() {
               borderBottomRightRadius: "15px",
             }}
           >
-            <ListWrapper />
+            <ChatList />
           </Paper>
         </Grid>
         <Grid item xs>
