@@ -12,10 +12,8 @@ export default function Chat() {
   return (
     <Container className={classes.root}>
       <Grid className={classes.chat}>
-        <Grid xs={12} className={classes.chatBox}>
-          Test
-        </Grid>
-        <Grid xs={12} className={classes.sendMsg}>
+        <Grid className={classes.chatBox}>Test</Grid>
+        <Grid className={classes.sendMsg}>
           <form>
             <Grid container>
               <Grid item xs={11}>
@@ -27,7 +25,7 @@ export default function Chat() {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={1} className={classes.send} alignItems="center">
+              <Grid item xs={1} className={classes.send}>
                 <IconButton type="submit" aria-label="add an alarm">
                   <SendIcon />
                 </IconButton>

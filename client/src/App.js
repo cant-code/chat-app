@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Router, Route, Switch } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import CssBaseline from '@material-ui/core/CssBaseline';

@@ -5,12 +5,16 @@ export const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     paddingTop: "1em",
+    overflowX: "hidden",
     [theme.breakpoints.up("sm")]: {
       borderTopLeftRadius: "15px",
       borderBottomLeftRadius: "15px",
+      paddingRight: 0,
     },
     background: "#000000",
+    // eslint-disable-next-line
     background: "-webkit-linear-gradient(to top, #434343, #000000)",
+    // eslint-disable-next-line
     background: "linear-gradient(to top, #434343, #000000)",
   },
   chat: {
