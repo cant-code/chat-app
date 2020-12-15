@@ -26,9 +26,9 @@ function App() {
       <CssBaseline/>
       <Router history={history}>
         <Switch>
-          <Route path='/' component={Home} />
           <Route path='/login' exact component={Login} />
           <Route path='/register' exact component={Register} />
+          <Route path='/' component={Home} />
         </Switch>
       </Router>
     </ThemeProvider>

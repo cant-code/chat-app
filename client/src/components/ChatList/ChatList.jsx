@@ -8,9 +8,9 @@ import Box from "@material-ui/core/Box";
 import { AppBar } from "./ChatList.style";
 
 function TabPanel(props) {
-  const { children, value, ...other } = props;
+  const { children, index, value, ...other } = props;
 
-  return <div {...other}>{value && <Box>{children}</Box>}</div>;
+  return <div {...other}>{value === index && <Box>{children}</Box>}</div>;
 }
 
 export default function IconLabelTabs() {
@@ -36,7 +36,7 @@ export default function IconLabelTabs() {
           <Tab icon={<ForumIcon />} label="Chat Rooms" />
         </Tabs>
       </AppBar>
-      <TabPanel value={value}>
+      <TabPanel index={value} value={value}>
         <ListWrapper />
       </TabPanel>
     </>

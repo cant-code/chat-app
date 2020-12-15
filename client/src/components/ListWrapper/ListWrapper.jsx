@@ -19,7 +19,11 @@ export default function ListWrapper() {
     <div className={classes.root}>
       <List
         component="nav"
-        style={{ maxHeight: "75vh", paddingTop: 0, overflow: "auto" }}
+        style={{
+          maxHeight: "74vh",
+          paddingTop: 0,
+          overflow: "auto",
+        }}
         aria-label="main mailbox folders"
       >
         <Divider />

@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import ChatList from "../components/ChatList/ChatList";
+import Chat from "../components/Chat/Chat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,7 +54,9 @@ export default function Home() {
             variant="outlined"
             className={`${classes.paper} ${classes.chatList}`}
             square
-          />
+          >
+            <Chat />
+          </Paper>
         </Grid>
       </Grid>
     </>

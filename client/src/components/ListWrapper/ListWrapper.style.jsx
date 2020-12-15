@@ -5,7 +5,7 @@ import MuiAvatar from "@material-ui/core/Avatar";
 export const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    maxWidth: 360,
+    maxHeight: "86%",
   },
 }));
 
