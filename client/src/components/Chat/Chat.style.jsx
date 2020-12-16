@@ -51,6 +51,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   box: {
     display: "flex",
+    width: "inherit",
     padding: theme.spacing(2),
     maxWidth: "100%",
     paddingLeft: 0,
@@ -58,5 +59,8 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       maxWidth: "100%",
     },
+  },
+  backgroundPrimary: {
+    backgroundColor: theme.palette.secondary.main,
   },
 }));

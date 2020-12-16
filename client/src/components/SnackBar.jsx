@@ -8,18 +8,18 @@ import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import Slide from "@material-ui/core/Slide";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   success: {
-    backgroundColor: "#4caf50",
+    backgroundColor: theme.palette.success.main,
     color: "#fff",
     fontWeight: 500,
   },
   error: {
-    backgroundColor: "#f44336",
+    backgroundColor: theme.palette.error.main,
     color: "#fff",
     fontWeight: 500,
   },
-});
+}));
 
 export default function DisplaySnackBar({ message, type, setPropOpen, open }) {
   const styles = useStyles();

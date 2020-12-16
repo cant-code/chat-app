@@ -30,24 +30,29 @@ export default function Chat() {
                 <Box
                   component={Paper}
                   style={{ marginLeft: m % 2 === 0 ? "auto" : "0" }}
-                  className={classes.message}
+                  className={`${classes.message} ${
+                    m % 2 === 0 ? classes.backgroundPrimary : null
+                  }`}
                   key={m}
                 >
                   <ListItem spacing={2}>
-                    <Box
-                      component={ListItemAvatar}
-                      display={{ xs: "none", md: "block" }}
-                    >
-                      <Avatar>W</Avatar>
-                    </Box>
+                    {m % 2 !== 0 && (
+                      <Box
+                        component={ListItemAvatar}
+                        display={{ xs: "none", md: "block" }}
+                      >
+                        <Avatar>W</Avatar>
+                      </Box>
+                    )}
                     <ListItemText
                       primary={
-                        <Typography>
+                        <Typography component="span" variant="body2">
                           Truncation should be conditionally applicable on this
                           long line of text as this is a much longer line than
                           what the container can support.
                         </Typography>
                       }
+                      secondary=""
                     />
                   </ListItem>
                 </Box>
