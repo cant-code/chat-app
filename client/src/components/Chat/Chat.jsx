@@ -7,8 +7,12 @@ import IconButton from "@material-ui/core/IconButton";
 import SendIcon from "@material-ui/icons/Send";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
+import List from "@material-ui/core/List";
 import Box from "@material-ui/core/Box";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
 
 export default function Chat() {
   const classes = useStyles();
@@ -16,27 +20,40 @@ export default function Chat() {
   return (
     <Container maxWidth={false} className={classes.root}>
       <Grid className={classes.chat}>
-        <Grid className={classes.chatBox}>
-          <Box className={`${classes.box}`}>
-            <Paper className={classes.message}>
-              <Grid container wrap="nowrap" spacing={2}>
+        <Grid container className={classes.chatBox}>
+          <Grid item className={classes.box}>
+            <List
+              className={classes.list}
+              style={{ maxHeight: "75vh", overflow: "auto" }}
+            >
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((m) => (
                 <Box
-                  component={Grid}
-                  item
-                  display={{ xs: "none", md: "block" }}
+                  component={Paper}
+                  style={{ marginLeft: m % 2 === 0 ? "auto" : "0" }}
+                  className={classes.message}
+                  key={m}
                 >
-                  <Avatar>W</Avatar>
+                  <ListItem spacing={2}>
+                    <Box
+                      component={ListItemAvatar}
+                      display={{ xs: "none", md: "block" }}
+                    >
+                      <Avatar>W</Avatar>
+                    </Box>
+                    <ListItemText
+                      primary={
+                        <Typography>
+                          Truncation should be conditionally applicable on this
+                          long line of text as this is a much longer line than
+                          what the container can support.
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
                 </Box>
-                <Grid item xs>
-                  <Typography>
-                    Truncation should be conditionally applicable on this long
-                    line of text as this is a much longer line than what the
-                    container can support.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Box>
+              ))}
+            </List>
+          </Grid>
         </Grid>
         <Grid className={classes.sendMsg}>
           <form>

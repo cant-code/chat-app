@@ -15,15 +15,7 @@ export default function Home() {
       <Navbar />
       <Grid container className={classes.root}>
         <Grid item xs={3} component={Box} display={{ xs: "none", sm: "block" }}>
-          <Paper
-            variant="outlined"
-            square
-            className={classes.paper}
-            style={{
-              marginRight: "1em",
-              borderTopRightRadius: "15px",
-            }}
-          >
+          <Paper variant="outlined" square className={classes.paper}>
             <ChatList />
           </Paper>
         </Grid>

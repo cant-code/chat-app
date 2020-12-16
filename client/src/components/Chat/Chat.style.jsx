@@ -7,8 +7,8 @@ export const useStyles = makeStyles((theme) => ({
     paddingTop: "1em",
     overflowX: "hidden",
     [theme.breakpoints.up("sm")]: {
-      borderTopLeftRadius: "15px",
-      borderBottomLeftRadius: "15px",
+      // borderTopLeftRadius: "15px",
+      // borderBottomLeftRadius: "15px",
       paddingRight: 0,
     },
     background: "#000000",
@@ -34,8 +34,13 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   message: {
-    padding: theme.spacing(2),
+    // padding: theme.spacing(2),
     marginTop: theme.spacing(1),
+    maxWidth: "75%",
+  },
+  list: {
+    width: "100%",
+    paddingRight: 0,
   },
   right: {
     maxWidth: "75%",
@@ -47,10 +52,11 @@ export const useStyles = makeStyles((theme) => ({
   box: {
     display: "flex",
     padding: theme.spacing(2),
-    maxWidth: "75%",
+    maxWidth: "100%",
     paddingLeft: 0,
+    paddingRight: 0,
     [theme.breakpoints.down("xs")]: {
-      maxWidth: "90%",
+      maxWidth: "100%",
     },
   },
 }));
