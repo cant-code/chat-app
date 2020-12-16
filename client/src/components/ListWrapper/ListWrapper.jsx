@@ -20,7 +20,7 @@ export default function ListWrapper() {
       <List
         component="nav"
         style={{
-          maxHeight: "74vh",
+          maxHeight: "79vh",
           paddingTop: 0,
           overflow: "auto",
         }}

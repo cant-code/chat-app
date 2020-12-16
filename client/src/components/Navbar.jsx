@@ -24,7 +24,7 @@ export default function ButtonAppBar() {
 
   return (
     <AppBar position="static">
-      <Toolbar>
+      <Toolbar variant="dense">
         <IconButton
           edge="start"
           className={classes.menuButton}

@@ -33,4 +33,24 @@ export const useStyles = makeStyles((theme) => ({
   send: {
     display: "flex",
   },
+  message: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(1),
+  },
+  right: {
+    maxWidth: "75%",
+    paddingLeft: 0,
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: "90%",
+    },
+  },
+  box: {
+    display: "flex",
+    padding: theme.spacing(2),
+    maxWidth: "75%",
+    paddingLeft: 0,
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: "90%",
+    },
+  },
 }));

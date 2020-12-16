@@ -22,7 +22,6 @@ export default function Home() {
             style={{
               marginRight: "1em",
               borderTopRightRadius: "15px",
-              borderBottomRightRadius: "15px",
             }}
           >
             <ChatList />
