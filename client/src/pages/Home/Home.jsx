@@ -14,17 +14,18 @@ export default function Home() {
     <>
       <Navbar />
       <Grid container className={classes.root}>
-        <Grid item xs={3} component={Box} display={{ xs: "none", sm: "block" }}>
+        <Grid
+          item
+          xs={3}
+          component={Box}
+          display={{ xs: "none", sm: "none", md: "block" }}
+        >
           <Paper variant="outlined" square className={classes.paper}>
             <ChatList />
           </Paper>
         </Grid>
         <Grid item xs>
-          <Paper
-            variant="outlined"
-            className={`${classes.paper} ${classes.chatList}`}
-            square
-          >
+          <Paper variant="outlined" className={classes.paper} square>
             <Chat />
           </Paper>
         </Grid>

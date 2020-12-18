@@ -5,7 +5,7 @@ import ContactsIcon from "@material-ui/icons/Contacts";
 import ForumIcon from "@material-ui/icons/Forum";
 import ListWrapper from "../ListWrapper/ListWrapper";
 import Box from "@material-ui/core/Box";
-import { AppBar } from "./ChatList.style";
+import { AppBar, useStyles } from "./ChatList.style";
 
 function TabPanel(props) {
   const { children, index, value, ...other } = props;
@@ -19,6 +19,8 @@ export default function IconLabelTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const classes = useStyles();
 
   return (
     <>
@@ -36,7 +38,7 @@ export default function IconLabelTabs() {
           <Tab icon={<ForumIcon />} label="Chat Rooms" />
         </Tabs>
       </AppBar>
-      <TabPanel index={value} value={value}>
+      <TabPanel className={classes.tabPanel} index={value} value={value}>
         <ListWrapper />
       </TabPanel>
     </>

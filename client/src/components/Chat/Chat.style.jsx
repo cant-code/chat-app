@@ -4,11 +4,8 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
     display: "flex",
-    paddingTop: "1em",
-    overflowX: "hidden",
-    [theme.breakpoints.up("sm")]: {
-      // borderTopLeftRadius: "15px",
-      // borderBottomLeftRadius: "15px",
+    overflow: "hidden",
+    [theme.breakpoints.up("md")]: {
       paddingRight: 0,
     },
     background: "#000000",
@@ -17,14 +14,37 @@ export const useStyles = makeStyles((theme) => ({
     // eslint-disable-next-line
     background: "linear-gradient(to top, #434343, #000000)",
   },
+  avatar: {
+    marginRight: "1em",
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.getContrastText(theme.palette.secondary.main),
+  },
+  userDetail: {
+    backgroundColor: "#000",
+    padding: "7px 20px",
+    display: "flex",
+  },
+  container: {
+    height: "100%",
+  },
+  paper: {
+    maxWidth: "90%",
+    paddingRight: "1em",
+    // width: "max-content",
+    marginTop: "1em",
+  },
   chat: {
     width: "100%",
+    overflow: "hidden",
   },
   chatBox: {
-    height: "90%",
+    height: "81%",
     width: "100%",
     display: "flex",
-    alignItems: "flex-end",
+    // flexDirection: "column",
+    justifyContent: "flex-end",
+    overflowY: "auto",
+    // overflowX: "hidden",
   },
   sendMsg: {
     height: "10%",
@@ -34,7 +54,6 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   message: {
-    // padding: theme.spacing(2),
     marginTop: theme.spacing(1),
     maxWidth: "75%",
   },
@@ -45,7 +64,7 @@ export const useStyles = makeStyles((theme) => ({
   right: {
     maxWidth: "75%",
     paddingLeft: 0,
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       maxWidth: "90%",
     },
   },
@@ -56,11 +75,11 @@ export const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
     paddingLeft: 0,
     paddingRight: 0,
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       maxWidth: "100%",
     },
   },
   backgroundPrimary: {
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.dark,
   },
 }));

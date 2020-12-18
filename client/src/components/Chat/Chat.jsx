@@ -18,69 +18,82 @@ export default function Chat() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth={false} className={classes.root}>
+    <Box className={classes.root}>
       <Grid className={classes.chat}>
-        <Grid container className={classes.chatBox}>
-          <Grid item className={classes.box}>
-            <List
-              className={classes.list}
-              style={{ maxHeight: "75vh", overflow: "auto" }}
-            >
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((m) => (
-                <Box
-                  component={Paper}
-                  style={{ marginLeft: m % 2 === 0 ? "auto" : "0" }}
-                  className={`${classes.message} ${
-                    m % 2 === 0 ? classes.backgroundPrimary : null
-                  }`}
-                  key={m}
-                >
-                  <ListItem spacing={2}>
-                    {m % 2 !== 0 && (
-                      <Box
-                        component={ListItemAvatar}
-                        display={{ xs: "none", md: "block" }}
-                      >
-                        <Avatar>W</Avatar>
-                      </Box>
-                    )}
-                    <ListItemText
-                      primary={
-                        <Typography component="span" variant="body2">
-                          Truncation should be conditionally applicable on this
-                          long line of text as this is a much longer line than
-                          what the container can support.
-                        </Typography>
-                      }
-                      secondary=""
-                    />
-                  </ListItem>
-                </Box>
-              ))}
-            </List>
+        <Grid container>
+          <Grid item xs={12}>
+            <Paper variant="outlined" square className={classes.userDetail}>
+              <Avatar
+                alt="Remy Sharp"
+                src="/static/images/avatar/1.jpg"
+                className={classes.avatar}
+              />
+              <Typography variant="h4">XYZ</Typography>
+            </Paper>
           </Grid>
         </Grid>
-        <Grid className={classes.sendMsg}>
-          <form>
-            <Grid container>
-              <Grid item xs={11}>
-                <TextField
-                  id="msg"
-                  label="Type your message..."
-                  variant="outlined"
-                  margin="dense"
-                  fullWidth
-                />
+        <Container maxWidth={false} className={classes.container}>
+          <Grid container className={classes.chatBox}>
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(
+              (m) => (
+                <Grid
+                  item
+                  style={{ display: "flex", width: "100%", minHeight: 0 }}
+                >
+                  <Paper
+                    className={`${classes.paper} ${
+                      m % 2 === 0 ? classes.backgroundPrimary : null
+                    }`}
+                    style={{
+                      marginLeft: m % 2 === 0 ? "auto" : "0",
+                      marginRight: "1em",
+                    }}
+                  >
+                    <Grid container wrap="nowrap" spacing={2}>
+                      {/* <Grid item>
+                        <Avatar>W</Avatar>
+                      </Grid> */}
+                      <Grid item xs>
+                        <Typography variant="body1" style={{ padding: "5px" }}>
+                          lorem50
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    {/* <Grid item xs>
+                      <Typography
+                        style={{ paddingLeft: "10px", textAlign: "end" }}
+                        variant="caption"
+                      >
+                        6:23pm
+                      </Typography>
+                    </Grid> */}
+                  </Paper>
+                </Grid>
+              )
+            )}
+          </Grid>
+          <Grid className={classes.sendMsg}>
+            <form>
+              <Grid container>
+                <Grid item xs={11}>
+                  <TextField
+                    id="msg"
+                    label="Type your message..."
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={1} className={classes.send}>
+                  <IconButton type="submit" aria-label="add an alarm">
+                    <SendIcon />
+                  </IconButton>
+                </Grid>
               </Grid>
-              <Grid item xs={1} className={classes.send}>
-                <IconButton type="submit" aria-label="add an alarm">
-                  <SendIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </form>
-        </Grid>
+            </form>
+          </Grid>
+        </Container>
       </Grid>
-    </Container>
+    </Box>
   );
 }

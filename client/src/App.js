@@ -5,7 +5,7 @@ import Home from './pages/Home/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import deepPurple from '@material-ui/core/colors/deepPurple';
+import pink from '@material-ui/core/colors/pink';
 import cyan from '@material-ui/core/colors/cyan';
 import history from './utils/history';
 
@@ -13,10 +13,10 @@ const theme = createMuiTheme({
   palette: {
     type: 'dark',
     background: {
-      default: '#121212'
+      default: '#1b262c'
     },
     primary: cyan,
-    secondary: deepPurple,
+    secondary: pink,
   }
 });
 
