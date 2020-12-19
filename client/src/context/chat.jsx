@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
 export const ChatContext = React.createContext({
-  id: "",
-  setId: () => {},
+  user: {},
+  setUser: () => {},
 });
 
 const ChatProvider = ({ children }) => {
-  const [id, setId] = useState("");
+  const [user, setUser] = useState({});
 
   return (
-    <ChatContext.Provider value={{ id, setId }}>
+    <ChatContext.Provider value={{ user, setUser }}>
       {children}
     </ChatContext.Provider>
   );

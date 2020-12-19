@@ -13,7 +13,7 @@ export default function ListWrapper(props) {
   const [selected, setSelected] = useState();
   const [users, setUsers] = useState([]);
   const socket = useContext(SocketContext);
-  const { setId } = useContext(ChatContext);
+  const { setUser } = useContext(ChatContext);
 
   useEffect(() => {
     if (list === 1) {
@@ -25,9 +25,9 @@ export default function ListWrapper(props) {
     }
   }, [socket, list]);
 
-  const handleListItemClick = (id) => {
+  const handleListItemClick = (id, username) => {
     setSelected(id);
-    setId(id);
+    setUser({ id, username });
   };
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function ListWrapper(props) {
                 button
                 dense
                 selected={selected === item._id}
-                onClick={() => handleListItemClick(item._id)}
+                onClick={() => handleListItemClick(item._id, item.username)}
               >
                 <ListItemAvatar>
                   <Avatar></Avatar>

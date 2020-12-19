@@ -13,7 +13,7 @@ import { ChatContext } from "../../context/chat";
 
 export default function Chat() {
   const classes = useStyles();
-  const { id } = useContext(ChatContext);
+  const { user } = useContext(ChatContext);
   const [msgs, setMsgs] = useState([]);
 
   useEffect(() => {
@@ -25,16 +25,16 @@ export default function Chat() {
           Authorization: `${localStorage.getItem("token")}`,
         },
       };
+      console.log(user);
       const res = await fetch(
-        `/api/messages/convos/query?userId=${id}`,
+        `/api/messages/convos/query?userId=${user.id}`,
         requestOptions
       );
       const data = await res.json();
       setMsgs(data);
-      console.log(msgs);
     }
-    if (id !== "") getChat();
-  }, [id]);
+    if (Object.entries(user).length !== 0) getChat();
+  }, [user]);
 
   return (
     <Box className={classes.root}>
@@ -42,19 +42,17 @@ export default function Chat() {
         <Grid container>
           <Grid item xs={12}>
             <Paper variant="outlined" square className={classes.userDetail}>
-              <Avatar
-                alt="Remy Sharp"
-                src="/static/images/avatar/1.jpg"
-                className={classes.avatar}
-              />
-              <Typography variant="h4">XYZ</Typography>
+              <Avatar alt={user.username} className={classes.avatar} />
+              <Typography variant="h4">
+                {user.username ? user.username : "Select a chat"}
+              </Typography>
             </Paper>
           </Grid>
         </Grid>
         <Container maxWidth={false} className={classes.container}>
           <Grid container className={classes.chatBox}>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(
-              (m) => (
+            {msgs.length > 0 &&
+              msgs.map((m) => (
                 <Grid
                   key={m}
                   item
@@ -78,8 +76,7 @@ export default function Chat() {
                     </Grid>
                   </Paper>
                 </Grid>
-              )
-            )}
+              ))}
           </Grid>
           <Grid className={classes.sendMsg}>
             <form autoComplete="off">
