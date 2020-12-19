@@ -8,6 +8,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import pink from '@material-ui/core/colors/pink';
 import cyan from '@material-ui/core/colors/cyan';
 import history from './utils/history';
+import { PrivateRoute } from './utils/privateRoute';
+import SocketContext, { socket } from './context/socket';
 
 const theme = createMuiTheme({
   palette: {
@@ -23,14 +25,16 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline/>
-      <Router history={history}>
-        <Switch>
-          <Route path='/login' exact component={Login} />
-          <Route path='/register' exact component={Register} />
-          <Route path='/' component={Home} />
-        </Switch>
-      </Router>
+      <SocketContext.Provider value={socket}>
+        <CssBaseline/>
+        <Router history={history}>
+          <Switch>
+            <Route path='/login' exact component={Login} />
+            <Route path='/register' exact component={Register} />
+            <PrivateRoute path='/' component={Home} />
+          </Switch>
+        </Router>
+      </SocketContext.Provider>
     </ThemeProvider>
   )
 }

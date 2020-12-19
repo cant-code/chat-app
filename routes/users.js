@@ -22,21 +22,21 @@ router.get('/', (req, res) => {
             password: 0,
             date: 0,
         })
-        .exec((e, user) => {
+        .exec((e, users) => {
             if(e) {
                 console.log(e);
                 res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify({ Error: 'error'}));
                 res.sendStatus(500);
+                res.end(JSON.stringify({ Error: 'error'}));
             }
-            else res.send(user);
+            else res.send(users);
         });
     }
     catch (e) {
         console.log(e);
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ Error: 'Unauthorized'}));
         res.sendStatus(401);
+        res.end(JSON.stringify({ Error: 'Unauthorized'}));
     }
 });
 
@@ -60,24 +60,10 @@ router.post('/register', (req, res) => {
                             id: user.id,
                             email: user.email
                         };
-                        jwt.sign(
-                            payload,
-                            secretOrPrivateKey,
-                            {
-                                expiresIn: 31556926,
-                            },
-                            (e, token) => {
-                                if(e) throw e;
-                                else {
-                                    req.io.sockets.emit('users', user.username);
-                                    res.json({
-                                        success: true,
-                                        token: 'Bearer ' + token,
-                                        username: user.username
-                                    });
-                                }
-                            }
-                        );
+                        req.io.sockets.emit('users', user.username);
+                        res.status(200).json({
+                            success: true,
+                        });
                     }).catch(e => console.log(e));
                 });
             });

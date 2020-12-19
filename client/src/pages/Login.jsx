@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
@@ -19,6 +20,7 @@ import { useStyles } from "./Form.style";
 
 export default function Login() {
   const classes = useStyles();
+  const history = useHistory();
   const initialBodyState = {
     username: "",
     password: "",
@@ -51,8 +53,10 @@ export default function Login() {
         } else {
           setMsg("Successfully Logged In");
           setType("success");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          history.push("/");
         }
-        console.log(data);
         if (!open) setOpen(true);
         else {
           setOpen(false);
@@ -61,7 +65,7 @@ export default function Login() {
       }
     }
     if (validation) sendForm();
-  }, [validation, body, formErrors, open]);
+  }, [validation, body, formErrors, open, history]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

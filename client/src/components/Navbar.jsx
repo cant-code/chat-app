@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -19,8 +20,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar({ selected }) {
   const classes = useStyles();
+  const history = useHistory();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    history.push("/login");
+  };
 
   return (
     <AppBar position="static">
@@ -36,7 +44,9 @@ export default function ButtonAppBar() {
         <Typography variant="h6" className={classes.title}>
           Chat App
         </Typography>
-        <Button color="inherit">Logout</Button>
+        <Button color="inherit" onClick={logout}>
+          Logout
+        </Button>
       </Toolbar>
     </AppBar>
   );

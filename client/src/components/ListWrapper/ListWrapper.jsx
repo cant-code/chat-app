@@ -1,19 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import InboxIcon from "@material-ui/icons/Inbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
 import Divider from "@material-ui/core/Divider";
 import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
 export default function ListWrapper() {
   const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selected, setSelected] = useState(1);
+  const [users, setUsers] = useState([]);
 
-  const handleListItemClick = (index) => {
-    setSelectedIndex(index);
+  const handleListItemClick = (id) => {
+    setSelected(id);
   };
+
+  useEffect(() => {
+    async function getUsers() {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${localStorage.getItem("token")}`,
+        },
+      };
+      const res = await fetch("/api/users/", requestOptions);
+      const data = await res.json();
+      setUsers(data);
+    }
+    getUsers();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -27,106 +42,22 @@ export default function ListWrapper() {
         aria-label="main mailbox folders"
       >
         <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 0}
-          onClick={() => handleListItemClick(0)}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <InboxIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Inbox" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 1}
-          onClick={() => handleListItemClick(1)}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <DraftsIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Drafts" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 2}
-          onClick={() => handleListItemClick(2)}
-        >
-          <ListItemText inset primary="Trash" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 3}
-          onClick={() => handleListItemClick(3)}
-        >
-          <ListItemText inset primary="Spam" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 4}
-          onClick={() => handleListItemClick(4)}
-        >
-          <ListItemText inset primary="Spam" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 5}
-          onClick={() => handleListItemClick(5)}
-        >
-          <ListItemText inset primary="Spam" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 6}
-          onClick={() => handleListItemClick(6)}
-        >
-          <ListItemText inset primary="Spam" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 7}
-          onClick={() => handleListItemClick(7)}
-        >
-          <ListItemText inset primary="Spam" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 8}
-          onClick={() => handleListItemClick(8)}
-        >
-          <ListItemText inset primary="Spam" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
-        <ListItem
-          button
-          dense
-          selected={selectedIndex === 9}
-          onClick={() => handleListItemClick(9)}
-        >
-          <ListItemText inset primary="Spam" secondary="08-12-2020" />
-        </ListItem>
-        <Divider />
+        {users.map((item) => (
+          <React.Fragment key={item._id}>
+            <ListItem
+              button
+              dense
+              selected={selected === item._id}
+              onClick={() => handleListItemClick(item._id)}
+            >
+              <ListItemAvatar>
+                <Avatar></Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={item.username} secondary="08-12-2020" />
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        ))}
       </List>
     </div>
   );

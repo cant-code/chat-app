@@ -39,7 +39,7 @@ export default function IconLabelTabs() {
         </Tabs>
       </AppBar>
       <TabPanel className={classes.tabPanel} index={value} value={value}>
-        <ListWrapper />
+        <ListWrapper selected={value} />
       </TabPanel>
     </>
   );

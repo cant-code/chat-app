@@ -21,7 +21,15 @@ const server = app.listen(port, () => {
     console.log('Server is up on port' + port);
 });
 
-const io = require('socket.io').listen(server);
+const io = require('socket.io')(server);
+io.sockets.emit("rooms", "Hello");
+io.on("connection", (socket) => {
+    console.log(socket.id);
+    socket.on('Hi', (msg) => {
+        io.emit('rooms', msg);
+    });
+    io.emit('rooms', 'Hi');
+});
 
 mongoose.connect(process.env.mongoDB, {
     useNewUrlParser: true,
