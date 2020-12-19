@@ -25,7 +25,6 @@ export default function Chat() {
           Authorization: `${localStorage.getItem("token")}`,
         },
       };
-      console.log(user);
       const res = await fetch(
         `/api/messages/convos/query?userId=${user.id}`,
         requestOptions

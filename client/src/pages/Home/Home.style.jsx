@@ -3,9 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    [theme.breakpoints.up("md")]: {
-      // marginTop: "1em",
-    },
   },
   paper: {
     [theme.breakpoints.down("sm")]: {

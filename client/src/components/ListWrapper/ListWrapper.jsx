@@ -9,20 +9,20 @@ import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
 export default function ListWrapper(props) {
   const classes = useStyles();
+  const { user, setUser } = useContext(ChatContext);
   const list = props.selected;
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState(user.id);
   const [users, setUsers] = useState([]);
   const socket = useContext(SocketContext);
-  const { setUser } = useContext(ChatContext);
 
   useEffect(() => {
     if (list === 1) {
       socket.emit("rooms", {});
       socket.on("rooms", (rooms) => {
         setUsers(rooms);
-        setSelected();
       });
     }
+    // return () => socket.disconnect();
   }, [socket, list]);
 
   const handleListItemClick = (id, username) => {
@@ -42,7 +42,6 @@ export default function ListWrapper(props) {
       const res = await fetch("/api/users/", requestOptions);
       const data = await res.json();
       setUsers(data);
-      setSelected();
     }
     if (list === 0) getUsers();
   }, [list]);

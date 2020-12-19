@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import Slide from "@material-ui/core/Slide";
 import ChatList from "../../components/ChatList/ChatList";
 import Chat from "../../components/Chat/Chat";
 import { SidebarContext } from "../../context/sidebar";
@@ -33,7 +34,12 @@ export default function Home() {
     <>
       <Navbar />
       <Grid container className={classes.root}>
-        {open && (
+        <Slide
+          direction="right"
+          in={open ? true : false}
+          mountOnEnter
+          unmountOnExit
+        >
           <Grid
             item
             xs={3}
@@ -44,7 +50,7 @@ export default function Home() {
               <ChatList />
             </Paper>
           </Grid>
-        )}
+        </Slide>
         <Grid item xs>
           <Paper variant="outlined" className={classes.paper} square>
             <Chat />
