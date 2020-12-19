@@ -22,13 +22,11 @@ const server = app.listen(port, () => {
 });
 
 const io = require('socket.io')(server);
-io.sockets.emit("rooms", "Hello");
+
 io.on("connection", (socket) => {
-    console.log(socket.id);
-    socket.on('Hi', (msg) => {
-        io.emit('rooms', msg);
+    socket.on('rooms', () => {
+        io.emit('rooms', socket.rooms);
     });
-    io.emit('rooms', 'Hi');
 });
 
 mongoose.connect(process.env.mongoDB, {

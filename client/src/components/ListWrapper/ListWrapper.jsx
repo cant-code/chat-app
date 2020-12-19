@@ -3,12 +3,25 @@ import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Divider from "@material-ui/core/Divider";
+import SocketContext from "../../context/socket";
 import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
-export default function ListWrapper() {
+export default function ListWrapper(props) {
   const classes = useStyles();
-  const [selected, setSelected] = useState(1);
+  const list = props.selected;
+  const [selected, setSelected] = useState();
   const [users, setUsers] = useState([]);
+  const socket = React.useContext(SocketContext);
+
+  useEffect(() => {
+    if (list === 1) {
+      socket.emit("rooms", {});
+      socket.on("rooms", (rooms) => {
+        setUsers(rooms);
+        setSelected();
+      });
+    }
+  }, [socket, list]);
 
   const handleListItemClick = (id) => {
     setSelected(id);
@@ -26,9 +39,10 @@ export default function ListWrapper() {
       const res = await fetch("/api/users/", requestOptions);
       const data = await res.json();
       setUsers(data);
+      setSelected();
     }
-    getUsers();
-  }, []);
+    if (list === 0) getUsers();
+  }, [list]);
 
   return (
     <div className={classes.root}>
@@ -42,22 +56,28 @@ export default function ListWrapper() {
         aria-label="main mailbox folders"
       >
         <Divider />
-        {users.map((item) => (
-          <React.Fragment key={item._id}>
-            <ListItem
-              button
-              dense
-              selected={selected === item._id}
-              onClick={() => handleListItemClick(item._id)}
-            >
-              <ListItemAvatar>
-                <Avatar></Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={item.username} secondary="08-12-2020" />
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        ))}
+        {users.length > 0 &&
+          users.map((item) => (
+            <React.Fragment key={item._id}>
+              <ListItem
+                button
+                dense
+                selected={selected === item._id}
+                onClick={() => handleListItemClick(item._id)}
+              >
+                <ListItemAvatar>
+                  <Avatar></Avatar>
+                </ListItemAvatar>
+                {item.username && (
+                  <ListItemText
+                    primary={item.username}
+                    secondary="08-12-2020"
+                  />
+                )}
+              </ListItem>
+              <Divider />
+            </React.Fragment>
+          ))}
       </List>
     </div>
   );

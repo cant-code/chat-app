@@ -7,11 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SendIcon from "@material-ui/icons/Send";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
 import Box from "@material-ui/core/Box";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
 import Paper from "@material-ui/core/Paper";
 
 export default function Chat() {
@@ -51,30 +47,19 @@ export default function Chat() {
                     }}
                   >
                     <Grid container wrap="nowrap" spacing={2}>
-                      {/* <Grid item>
-                        <Avatar>W</Avatar>
-                      </Grid> */}
                       <Grid item xs>
                         <Typography variant="body1" style={{ padding: "5px" }}>
                           lorem50
                         </Typography>
                       </Grid>
                     </Grid>
-                    {/* <Grid item xs>
-                      <Typography
-                        style={{ paddingLeft: "10px", textAlign: "end" }}
-                        variant="caption"
-                      >
-                        6:23pm
-                      </Typography>
-                    </Grid> */}
                   </Paper>
                 </Grid>
               )
             )}
           </Grid>
           <Grid className={classes.sendMsg}>
-            <form>
+            <form autocomplete="off">
               <Grid container>
                 <Grid item xs={11}>
                   <TextField
