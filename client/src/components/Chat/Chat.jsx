@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { useStyles } from "./Chat.style";
@@ -9,9 +9,32 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
+import { ChatContext } from "../../context/chat";
 
 export default function Chat() {
   const classes = useStyles();
+  const { id } = useContext(ChatContext);
+  const [msgs, setMsgs] = useState([]);
+
+  useEffect(() => {
+    async function getChat() {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${localStorage.getItem("token")}`,
+        },
+      };
+      const res = await fetch(
+        `/api/messages/convos/query?userId=${id}`,
+        requestOptions
+      );
+      const data = await res.json();
+      setMsgs(data);
+      console.log(msgs);
+    }
+    if (id !== "") getChat();
+  }, [id]);
 
   return (
     <Box className={classes.root}>
@@ -59,7 +82,7 @@ export default function Chat() {
             )}
           </Grid>
           <Grid className={classes.sendMsg}>
-            <form autocomplete="off">
+            <form autoComplete="off">
               <Grid container>
                 <Grid item xs={11}>
                   <TextField

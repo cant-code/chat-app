@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Divider from "@material-ui/core/Divider";
 import SocketContext from "../../context/socket";
+import { ChatContext } from "../../context/chat";
 import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
 export default function ListWrapper(props) {
@@ -11,7 +12,8 @@ export default function ListWrapper(props) {
   const list = props.selected;
   const [selected, setSelected] = useState();
   const [users, setUsers] = useState([]);
-  const socket = React.useContext(SocketContext);
+  const socket = useContext(SocketContext);
+  const { setId } = useContext(ChatContext);
 
   useEffect(() => {
     if (list === 1) {
@@ -25,6 +27,7 @@ export default function ListWrapper(props) {
 
   const handleListItemClick = (id) => {
     setSelected(id);
+    setId(id);
   };
 
   useEffect(() => {
