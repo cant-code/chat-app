@@ -29,22 +29,27 @@ export const useStyles = makeStyles((theme) => ({
   },
   paper: {
     maxWidth: "90%",
+    minWidth: "5%",
+    width: "fit-content",
     paddingRight: "1em",
-    // width: "max-content",
     marginTop: "1em",
+    marginRight: "1em",
+    marginBottom: "1em",
   },
   chat: {
     width: "100%",
     overflow: "hidden",
   },
+  chatContainer: {
+    height: "fit-content",
+    maxHeight: "100%",
+  },
   chatBox: {
     height: "81%",
     width: "100%",
     display: "flex",
-    // flexDirection: "column",
-    justifyContent: "flex-end",
+    alignItems: "flex-end",
     overflowY: "auto",
-    // overflowX: "hidden",
   },
   sendMsg: {
     height: "10%",
@@ -52,32 +57,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   send: {
     display: "flex",
-  },
-  message: {
-    marginTop: theme.spacing(1),
-    maxWidth: "75%",
-  },
-  list: {
-    width: "100%",
-    paddingRight: 0,
-  },
-  right: {
-    maxWidth: "75%",
-    paddingLeft: 0,
-    [theme.breakpoints.down("sm")]: {
-      maxWidth: "90%",
-    },
-  },
-  box: {
-    display: "flex",
-    width: "inherit",
-    padding: theme.spacing(2),
-    maxWidth: "100%",
-    paddingLeft: 0,
-    paddingRight: 0,
-    [theme.breakpoints.down("sm")]: {
-      maxWidth: "100%",
-    },
   },
   backgroundPrimary: {
     backgroundColor: theme.palette.primary.dark,

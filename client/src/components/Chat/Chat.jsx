@@ -10,11 +10,21 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import { ChatContext } from "../../context/chat";
+import SocketContext from "../../context/socket";
 
 export default function Chat() {
   const classes = useStyles();
   const { user } = useContext(ChatContext);
+  const socket = useContext(SocketContext);
   const [msgs, setMsgs] = useState([]);
+  const [text, setText] = useState("");
+  const userId = localStorage.getItem("id");
+
+  useEffect(() => {
+    socket.on("messages", (body) => {
+      setMsgs((m) => [...m, body]);
+    });
+  }, [socket]);
 
   useEffect(() => {
     async function getChat() {
@@ -35,6 +45,22 @@ export default function Chat() {
     if (Object.entries(user).length !== 0) getChat();
   }, [user]);
 
+  const submitMsg = async (e) => {
+    e.preventDefault();
+    if (text === "") return;
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ to: user.id, data: text }),
+    };
+    const res = await fetch("/api/messages/", requestOptions);
+    const data = await res.json();
+    setText("");
+  };
+
   return (
     <Box className={classes.root}>
       <Grid className={classes.chat}>
@@ -49,39 +75,46 @@ export default function Chat() {
           </Grid>
         </Grid>
         <Container maxWidth={false} className={classes.container}>
-          <Grid container className={classes.chatBox}>
-            {msgs.length > 0 &&
-              msgs.map((m) => (
-                <Grid
-                  key={m}
-                  item
-                  style={{ display: "flex", width: "100%", minHeight: 0 }}
-                >
-                  <Paper
-                    className={`${classes.paper} ${
-                      m % 2 === 0 ? classes.backgroundPrimary : null
-                    }`}
-                    style={{
-                      marginLeft: m % 2 === 0 ? "auto" : "0",
-                      marginRight: "1em",
-                    }}
+          <Box className={classes.chatBox}>
+            <Grid container className={classes.chatContainer}>
+              {msgs.length > 0 &&
+                msgs.map((m) => (
+                  <Grid
+                    key={m._id}
+                    item
+                    style={{ width: "100%", minHeight: 0 }}
                   >
-                    <Grid container wrap="nowrap" spacing={2}>
-                      <Grid item xs>
-                        <Typography variant="body1" style={{ padding: "5px" }}>
-                          lorem50
-                        </Typography>
+                    <Paper
+                      className={`${classes.paper} ${
+                        m.from === userId ? classes.backgroundPrimary : null
+                      }`}
+                      style={{
+                        marginLeft: m.from === userId ? "auto" : "0",
+                      }}
+                    >
+                      <Grid container wrap="nowrap" spacing={2}>
+                        <Grid item xs>
+                          <Typography
+                            variant="body1"
+                            style={{ padding: "5px" }}
+                          >
+                            {m.body}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-              ))}
-          </Grid>
+                    </Paper>
+                  </Grid>
+                ))}
+            </Grid>
+          </Box>
           <Grid className={classes.sendMsg}>
-            <form autoComplete="off">
+            <form autoComplete="off" noValidate onSubmit={submitMsg}>
               <Grid container>
                 <Grid item xs={11}>
                   <TextField
+                    disabled={user.username ? false : true}
+                    onChange={(e) => setText(e.target.value)}
+                    value={text}
                     id="msg"
                     label="Type your message..."
                     variant="outlined"
@@ -90,7 +123,11 @@ export default function Chat() {
                   />
                 </Grid>
                 <Grid item xs={1} className={classes.send}>
-                  <IconButton type="submit" aria-label="add an alarm">
+                  <IconButton
+                    type="submit"
+                    aria-label="add an alarm"
+                    disabled={user.username ? false : true}
+                  >
                     <SendIcon />
                   </IconButton>
                 </Grid>

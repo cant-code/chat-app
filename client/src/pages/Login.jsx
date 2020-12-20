@@ -54,7 +54,7 @@ export default function Login() {
           setMsg("Successfully Logged In");
           setType("success");
           localStorage.setItem("token", data.token);
-          localStorage.setItem("username", data.username);
+          localStorage.setItem("id", data.id);
           history.push("/");
         }
         if (!open) setOpen(true);

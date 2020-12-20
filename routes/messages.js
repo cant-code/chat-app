@@ -140,13 +140,13 @@ router.get('/convos/query', (req,res) => {
     });
 });
 
-router.post('/', (req,res) => {
+router.post('/', (req, res) => {
     let from = mongoose.Types.ObjectId(jwtUser.id);
     let to = mongoose.Types.ObjectId(req.body.to);
 
     Convo.findOneAndUpdate(
     {
-        recipients: {
+        recipient: {
             $all: [
                 { $elemMatch: { $eq: from }},
                 { $elemMatch: { $eq: to }},
@@ -154,7 +154,7 @@ router.post('/', (req,res) => {
         },
     },
     {
-        recipients: [jwtUser.id, req.body.to],
+        recipient: [jwtUser.id, req.body.to],
         lastMessage: req.body.data,
         date: Date.now(),
     },
@@ -163,8 +163,8 @@ router.post('/', (req,res) => {
         if(err) {
             console.log(err);
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Failure' }));
             res.sendStatus(500);
+            res.end(JSON.stringify({ message: 'Failure' }));
         } else {
             let message = new Message({
                 conversation: conversation._id,
@@ -173,15 +173,14 @@ router.post('/', (req,res) => {
                 body: req.body.data,
             });
 
-            req.io.sockets.emit('messages', req.body.body);
-
-            message.save(err => {
+            message.save((err, item) => {
                 if (err) {
                     console.log(err);
                     res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify({ message: 'Failure' }));
                     res.sendStatus(500);
+                    res.end(JSON.stringify({ message: 'Failure' }));
                 } else {
+                    req.io.sockets.emit('messages', item);
                     res.setHeader('Content-Type', 'application/json');
                     res.end(
                         JSON.stringify({
