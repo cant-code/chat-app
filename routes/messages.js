@@ -9,6 +9,7 @@ const verify = require('../utils/verifyToken');
 const Message = require('../models/Message');
 const Convo = require('../models/Conversation');
 const Global = require('../models/GlobalMessage');
+var clients = require('../utils/clientData');
 
 let jwtUser = null;
 
@@ -180,7 +181,8 @@ router.post('/', (req, res) => {
                     res.sendStatus(500);
                     res.end(JSON.stringify({ message: 'Failure' }));
                 } else {
-                    req.io.sockets.emit('messages', item);
+                    if (req.body.to in clients) req.io.to(clients[req.body.to]).emit('messages', item);
+                    req.io.to(clients[jwtUser.id]).emit('messages', item);
                     res.setHeader('Content-Type', 'application/json');
                     res.end(
                         JSON.stringify({

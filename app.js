@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 
 const users = require('./routes/users');
 const messages = require('./routes/messages');
+var clients = require('./utils/clientData');
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,14 @@ const io = require('socket.io')(server);
 io.on("connection", (socket) => {
     socket.on('rooms', () => {
         io.emit('rooms', socket.rooms);
+    });
+    socket.on('clientInfo', (data) => {
+        clients[data.id] = socket.id;
+    });
+    socket.on('disconnect', () => {
+        for (var i in clients) {
+            if (clients[i] === socket.id) delete clients[i];
+        }
     });
 });
 

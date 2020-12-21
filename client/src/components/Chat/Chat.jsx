@@ -21,6 +21,10 @@ export default function Chat() {
   const userId = localStorage.getItem("id");
 
   useEffect(() => {
+    socket.emit("clientInfo", { id: localStorage.getItem("id") });
+  }, []);
+
+  useEffect(() => {
     socket.on("messages", (body) => {
       setMsgs((m) => [...m, body]);
     });
