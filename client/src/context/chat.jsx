@@ -8,11 +8,15 @@ export const ChatContext = React.createContext({
 const ChatProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
-  return (
-    <ChatContext.Provider value={{ user, setUser }}>
-      {children}
-    </ChatContext.Provider>
+  const value = React.useMemo(
+    () => ({
+      user,
+      setUser,
+    }),
+    [user]
   );
+
+  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
 
 export default ChatProvider;

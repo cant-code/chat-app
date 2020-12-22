@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { useStyles } from "./Chat.style";
@@ -15,6 +15,8 @@ import SocketContext from "../../context/socket";
 export default function Chat() {
   const classes = useStyles();
   const { user } = useContext(ChatContext);
+  const clientId = useRef();
+  clientId.current = user.id;
   const socket = useContext(SocketContext);
   const [msgs, setMsgs] = useState([]);
   const [text, setText] = useState("");
@@ -26,9 +28,14 @@ export default function Chat() {
 
   useEffect(() => {
     socket.on("messages", (body) => {
-      setMsgs((m) => [...m, body]);
+      if (
+        clientId.current === body.from ||
+        localStorage.getItem("id") === body.from
+      ) {
+        setMsgs((m) => [...m, body]);
+      }
     });
-  }, [socket]);
+  }, [clientId]);
 
   useEffect(() => {
     async function getChat() {
