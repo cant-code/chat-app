@@ -9,6 +9,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
+// import ScrollToBottom from "../ScrollToBottom/ScrollToBottom";
 import { ChatContext } from "../../context/chat";
 import SocketContext from "../../context/socket";
 
@@ -21,6 +22,8 @@ export default function Chat() {
   const [msgs, setMsgs] = useState([]);
   const [text, setText] = useState("");
   const userId = localStorage.getItem("id");
+  const fieldRef = useRef(null);
+  const currWindow = useRef(null);
 
   useEffect(() => {
     socket.emit("clientInfo", { id: localStorage.getItem("id") });
@@ -30,9 +33,11 @@ export default function Chat() {
     socket.on("messages", (body) => {
       if (
         clientId.current === body.from ||
-        localStorage.getItem("id") === body.from
+        localStorage.getItem("id") === body.from ||
+        clientId.current === "global"
       ) {
         setMsgs((m) => [...m, body]);
+        handleScroll();
       }
     });
   }, [clientId]);
@@ -52,24 +57,54 @@ export default function Chat() {
       );
       const data = await res.json();
       setMsgs(data);
+      handleScroll();
     }
-    if (Object.entries(user).length !== 0) getChat();
+    async function getGlobal() {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${localStorage.getItem("token")}`,
+        },
+      };
+      const res = await fetch("/api/messages/global/", requestOptions);
+      const data = await res.json();
+      setMsgs(data);
+      handleScroll();
+    }
+    if (Object.entries(user).length !== 0 && user.id !== "global") getChat();
+    if (user.id === "global") {
+      socket.emit("global");
+      getGlobal();
+    }
   }, [user]);
 
   const submitMsg = async (e) => {
     e.preventDefault();
     if (text === "") return;
+    let data, url;
+    if (user.id === "global") {
+      data = JSON.stringify({ data: text });
+      url = "/api/messages/global/";
+    } else {
+      data = JSON.stringify({ to: user.id, data: text });
+      url = "/api/messages/";
+    }
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ to: user.id, data: text }),
+      body: data,
     };
-    const res = await fetch("/api/messages/", requestOptions);
-    const data = await res.json();
+    const res = await fetch(url, requestOptions);
     setText("");
+  };
+
+  const handleScroll = () => {
+    if (fieldRef.current !== null)
+      fieldRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
   };
 
   return (
@@ -86,7 +121,7 @@ export default function Chat() {
           </Grid>
         </Grid>
         <Container maxWidth={false} className={classes.container}>
-          <Box className={classes.chatBox}>
+          <Box className={classes.chatBox} ref={currWindow}>
             <Grid container className={classes.chatContainer}>
               {msgs.length > 0 &&
                 msgs.map((m) => (
@@ -94,6 +129,7 @@ export default function Chat() {
                     key={m._id}
                     item
                     style={{ width: "100%", minHeight: 0 }}
+                    ref={fieldRef}
                   >
                     <Paper
                       className={`${classes.paper} ${
@@ -117,6 +153,9 @@ export default function Chat() {
                   </Grid>
                 ))}
             </Grid>
+            {/* {msgs.length > 0 && (
+              <ScrollToBottom lastId={fieldRef} target={currWindow} />
+            )} */}
           </Box>
           <Grid className={classes.sendMsg}>
             <form autoComplete="off" noValidate onSubmit={submitMsg}>

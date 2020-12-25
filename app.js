@@ -32,9 +32,16 @@ io.on("connection", (socket) => {
         clients[data.id] = socket.id;
     });
     socket.on('disconnect', () => {
-        for (var i in clients) {
+        for (let i in clients) {
             if (clients[i] === socket.id) delete clients[i];
         }
+        for (let i in socket.rooms) socket.leave(i);
+    });
+    socket.on('global', () => {
+        socket.join('global');
+    });
+    socket.on('endglobal', () => {
+        socket.leave('global');
     });
 });
 

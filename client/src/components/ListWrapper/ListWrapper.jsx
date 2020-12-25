@@ -17,15 +17,21 @@ export default function ListWrapper(props) {
 
   useEffect(() => {
     if (list === 1) {
+      const global = {
+        _id: "global",
+        username: "Global",
+      };
       socket.emit("rooms", {});
       socket.on("rooms", (rooms) => {
-        setUsers(rooms);
+        console.log(rooms);
+        setUsers([global]);
       });
     }
     // return () => socket.disconnect();
   }, [socket, list]);
 
   const handleListItemClick = (id, username) => {
+    if (selected === "global") socket.emit("endglobal");
     setSelected(id);
     setUser({ id, username });
   };
@@ -70,12 +76,7 @@ export default function ListWrapper(props) {
                 <ListItemAvatar>
                   <Avatar></Avatar>
                 </ListItemAvatar>
-                {item.username && (
-                  <ListItemText
-                    primary={item.username}
-                    secondary="08-12-2020"
-                  />
-                )}
+                {item.username && <ListItemText primary={item.username} />}
               </ListItem>
               <Divider />
             </React.Fragment>

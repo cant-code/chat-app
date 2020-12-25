@@ -20,8 +20,8 @@ router.use(function(req, res, next) {
     } catch(e) {
         console.log(e);
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ Error: 'Unauthorized'}));
         res.sendStatus(401);
+        res.end(JSON.stringify({ Error: 'Unauthorized'}));
     }
 });
 
@@ -44,8 +44,8 @@ router.get('/global', (req, res) => {
         if(e) {
             console.log(e);
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ error: 'Error'}));
             res.sendStatus(500);
+            res.end(JSON.stringify({ error: 'Error'}));
         } else res.send(msgs);
     });
 });
@@ -56,15 +56,14 @@ router.post('/global', (req, res) => {
         body: req.body.data,
     });
 
-    req.io.sockets.emit('messages', req.body.data);
-
-    msg.save(err => {
+    msg.save((err, item) => {
         if(err) {
             console.log(err);
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ error: 'Error' }));
             res.sendStatus(500);
+            res.end(JSON.stringify({ error: 'Error' }));
         } else {
+            req.io.to('global').emit('messages', item);
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ message: 'Success'}));
         }
@@ -77,13 +76,13 @@ router.get('/convo', (req, res) => {
         {
             $lookup: {
                 from: 'users',
-                localField: 'recipients',
+                localField: 'recipient',
                 foreignField: '_id',
                 as: 'recipientObj',
             },
         },
     ])
-    .match({ recipients: { $all: [{ $elemMatch: { $eq: from }}]}})
+    .match({ recipient: { $all: [{ $elemMatch: { $eq: from }}]}})
     .project({
         'recipientObj.password': 0,
         'recipientObj.date': 0,
@@ -92,8 +91,8 @@ router.get('/convo', (req, res) => {
         if(err) {
             console.log(err);
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Failure' }));
             res.sendStatus(500);
+            res.end(JSON.stringify({ message: 'Failure' }));
         } else res.send(convos);
     });
 });
@@ -135,8 +134,8 @@ router.get('/convos/query', (req,res) => {
         if(err) {
             console.log(err);
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Failure' }));
             res.sendStatus(500);
+            res.end(JSON.stringify({ message: 'Failure' }));
         } else res.send(msgs);
     });
 });
