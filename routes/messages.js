@@ -63,9 +63,35 @@ router.post('/global', (req, res) => {
             res.sendStatus(500);
             res.end(JSON.stringify({ error: 'Error' }));
         } else {
-            req.io.to('global').emit('messages', item);
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Success'}));
+            Global.aggregate([
+                {
+                    $match: {
+                        _id: item._id
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'from',
+                        foreignField: '_id',
+                        as: 'fromObj'
+                    }
+                }
+            ]).project({
+                'fromObj.password': 0,
+                'fromObj.date': 0
+            }).exec((e, msg) => {
+                if(e) {
+                    console.log(e);
+                    res.setHeader('Content-Type', 'application/json');
+                    res.sendStatus(500);
+                    res.end(JSON.stringify({ error: 'Error'}));
+                } else {
+                    req.io.to('global').emit('messages', msg[0]);
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ message: 'Success'}));
+                }
+            });
         }
     });
 });

@@ -19,6 +19,10 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
     color: theme.palette.getContrastText(theme.palette.secondary.main),
   },
+  userAvatar: {
+    marginLeft: "0.3em",
+    backgroundColor: "white",
+  },
   userDetail: {
     backgroundColor: "#000",
     padding: "7px 20px",

@@ -6,9 +6,11 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from "@material-ui/icons/Send";
 import Avatar from "@material-ui/core/Avatar";
+import ForumIcon from "@material-ui/icons/Forum";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
+import Tooltip from "@material-ui/core/Tooltip";
 // import ScrollToBottom from "../ScrollToBottom/ScrollToBottom";
 import { ChatContext } from "../../context/chat";
 import SocketContext from "../../context/socket";
@@ -43,7 +45,7 @@ export default function Chat() {
   }, [clientId]);
 
   useEffect(() => {
-    async function getChat() {
+    async function getChat(url) {
       const requestOptions = {
         method: "GET",
         headers: {
@@ -51,31 +53,16 @@ export default function Chat() {
           Authorization: `${localStorage.getItem("token")}`,
         },
       };
-      const res = await fetch(
-        `/api/messages/convos/query?userId=${user.id}`,
-        requestOptions
-      );
+      const res = await fetch(url, requestOptions);
       const data = await res.json();
       setMsgs(data);
       handleScroll();
     }
-    async function getGlobal() {
-      const requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("token")}`,
-        },
-      };
-      const res = await fetch("/api/messages/global/", requestOptions);
-      const data = await res.json();
-      setMsgs(data);
-      handleScroll();
-    }
-    if (Object.entries(user).length !== 0 && user.id !== "global") getChat();
+    if (Object.entries(user).length !== 0 && user.id !== "global")
+      getChat(`/api/messages/convos/query?userId=${user.id}`);
     if (user.id === "global") {
       socket.emit("global");
-      getGlobal();
+      getChat("/api/messages/global/");
     }
   }, [user]);
 
@@ -113,7 +100,9 @@ export default function Chat() {
         <Grid container>
           <Grid item xs={12}>
             <Paper variant="outlined" square className={classes.userDetail}>
-              <Avatar alt={user.username} className={classes.avatar} />
+              <Avatar alt={user.username} className={classes.avatar}>
+                {user.id === "global" && <ForumIcon />}
+              </Avatar>
               <Typography variant="h4">
                 {user.username ? user.username : "Select a chat"}
               </Typography>
@@ -140,6 +129,15 @@ export default function Chat() {
                       }}
                     >
                       <Grid container wrap="nowrap" spacing={2}>
+                        <Grid item>
+                          {user.id === "global" && (
+                            <Tooltip title={m.fromObj[0].username} arrow>
+                              <Avatar className={classes.userAvatar}>
+                                {m.fromObj[0].username[0]}
+                              </Avatar>
+                            </Tooltip>
+                          )}
+                        </Grid>
                         <Grid item xs>
                           <Typography
                             variant="body1"

@@ -23,7 +23,6 @@ export default function ListWrapper(props) {
       };
       socket.emit("rooms", {});
       socket.on("rooms", (rooms) => {
-        console.log(rooms);
         setUsers([global]);
       });
     }
