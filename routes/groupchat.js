@@ -110,14 +110,14 @@ router.get('/', (req, res) => {
                 from: 'users',
                 localField: 'users',
                 foreignField: '_id',
-                as: 'userObj',
+                as: 'fromObj',
             },
         },
     ])
     .match({ recipient: { $all: [{ $elemMatch: { $eq: from }}]}})
     .project({
-        'userObj.password': 0,
-        'userObj.date': 0,
+        'fromObj.password': 0,
+        'fromObj.date': 0,
     })
     .exec((err, convos) => {
         if(err) {
@@ -127,6 +127,11 @@ router.get('/', (req, res) => {
             res.end(JSON.stringify({ message: 'Failure' }));
         } else res.send(convos);
     });
+});
+
+router.post('/room', (req, res) => {
+    let type = req.body.type;
+
 });
 
 module.exports = router;

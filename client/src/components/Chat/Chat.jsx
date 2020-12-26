@@ -107,7 +107,7 @@ export default function Chat() {
           <Grid item xs={12}>
             <Paper variant="outlined" square className={classes.userDetail}>
               <Avatar alt={user.username} className={classes.avatar}>
-                {user.id === "global" && <ForumIcon />}
+                {user.type === "group" ? <ForumIcon /> : null}
               </Avatar>
               <Typography variant="h4">
                 {user.username ? user.username : "Select a chat"}
@@ -136,7 +136,7 @@ export default function Chat() {
                     >
                       <Grid container wrap="nowrap" spacing={2}>
                         <Grid item>
-                          {user.id === "global" && (
+                          {user.type === "group" && (
                             <Tooltip title={m.fromObj[0].username} arrow>
                               <Avatar className={classes.userAvatar}>
                                 {m.fromObj[0].username[0]}

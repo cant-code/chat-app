@@ -26,9 +26,6 @@ const server = app.listen(port, () => {
 const io = require('socket.io')(server);
 
 io.on("connection", (socket) => {
-    socket.on('rooms', () => {
-        io.emit('rooms', socket.rooms);
-    });
     socket.on('clientInfo', (data) => {
         clients[data.id] = socket.id;
     });

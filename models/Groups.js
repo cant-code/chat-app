@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 const GroupsSchema = new Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        dropDups: true,
     },
     users: [{
         type: Schema.Types.ObjectId,
