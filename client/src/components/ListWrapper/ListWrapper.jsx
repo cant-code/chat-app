@@ -15,28 +15,31 @@ export default function ListWrapper(props) {
   const [users, setUsers] = useState([]);
   const socket = useContext(SocketContext);
 
-  useEffect(() => {
-    if (list === 1) {
-      const global = {
-        _id: "global",
-        username: "Global",
-      };
-      socket.emit("rooms", {});
-      socket.on("rooms", (rooms) => {
-        setUsers([global]);
-      });
-    }
-    // return () => socket.disconnect();
-  }, [socket, list]);
+  // useEffect(() => {
+  //   if (list === 1) {
+  //     const global = {
+  //       _id: "global",
+  //       username: "Global",
+  //     };
+  //     socket.emit("rooms", {});
+  //     socket.on("rooms", (rooms) => {
+  //       setUsers([global]);
+  //     });
+  //   }
+  //   // return () => socket.disconnect();
+  // }, [socket, list]);
 
   const handleListItemClick = (id, username) => {
-    if (selected === "global") socket.emit("endglobal");
+    if (user.type === "group") {
+      socket.emit("endgroup", id);
+    }
+    let type = list === 0 ? "chat" : "group";
     setSelected(id);
-    setUser({ id, username });
+    setUser({ id, username, type });
   };
 
   useEffect(() => {
-    async function getUsers() {
+    async function getUsers(url) {
       const requestOptions = {
         method: "GET",
         headers: {
@@ -44,11 +47,13 @@ export default function ListWrapper(props) {
           Authorization: `${localStorage.getItem("token")}`,
         },
       };
-      const res = await fetch("/api/users/", requestOptions);
+      const res = await fetch(url, requestOptions);
       const data = await res.json();
+      console.log(data);
       setUsers(data);
     }
-    if (list === 0) getUsers();
+    if (list === 0) getUsers("/api/users/");
+    else if (list === 1) getUsers("/api/group/");
   }, [list]);
 
   return (
@@ -63,6 +68,22 @@ export default function ListWrapper(props) {
         aria-label="main mailbox folders"
       >
         <Divider />
+        {list === 1 && (
+          <React.Fragment>
+            <ListItem
+              button
+              dense
+              selected={selected === "global"}
+              onClick={() => handleListItemClick("global", "Global")}
+            >
+              <ListItemAvatar>
+                <Avatar></Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Global" />
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        )}
         {users.length > 0 &&
           users.map((item) => (
             <React.Fragment key={item._id}>

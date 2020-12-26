@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const MessageSchema = new Schema({
-    conversation: {
+const GroupChatSchema = new Schema({
+    group: {
         type: Schema.Types.ObjectId,
-        ref: 'conversation'
-    },
-    to: {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'groups'
     },
     from: {
         type: Schema.Types.ObjectId,
@@ -24,4 +20,4 @@ const MessageSchema = new Schema({
     }
 });
 
-module.exports = Message = mongoose.model('message', MessageSchema);
+module.exports = Message = mongoose.model('groupchat', GroupChatSchema);

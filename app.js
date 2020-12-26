@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 
 const users = require('./routes/users');
 const messages = require('./routes/messages');
+const groups = require('./routes/groupchat');
 var clients = require('./utils/clientData');
 
 dotenv.config();
@@ -37,11 +38,11 @@ io.on("connection", (socket) => {
         }
         for (let i in socket.rooms) socket.leave(i);
     });
-    socket.on('global', () => {
-        socket.join('global');
+    socket.on('joingroup', (item) => {
+        socket.join(item);
     });
-    socket.on('endglobal', () => {
-        socket.leave('global');
+    socket.on('endgroup', (item) => {
+        socket.leave(item);
     });
 });
 
@@ -63,3 +64,4 @@ app.use(function (req, res, next) {
 
 app.use('/api/users', users);
 app.use('/api/messages', messages);
+app.use('/api/group', groups);

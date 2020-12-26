@@ -19,7 +19,7 @@ export default function Chat() {
   const classes = useStyles();
   const { user } = useContext(ChatContext);
   const clientId = useRef();
-  clientId.current = user.id;
+  clientId.current = user;
   const socket = useContext(SocketContext);
   const [msgs, setMsgs] = useState([]);
   const [text, setText] = useState("");
@@ -34,9 +34,9 @@ export default function Chat() {
   useEffect(() => {
     socket.on("messages", (body) => {
       if (
-        clientId.current === body.from ||
+        clientId.current.id === body.from ||
         localStorage.getItem("id") === body.from ||
-        clientId.current === "global"
+        clientId.current.type === "group"
       ) {
         setMsgs((m) => [...m, body]);
         handleScroll();
@@ -58,11 +58,12 @@ export default function Chat() {
       setMsgs(data);
       handleScroll();
     }
-    if (Object.entries(user).length !== 0 && user.id !== "global")
+    if (Object.entries(user).length !== 0 && user.type !== "group")
       getChat(`/api/messages/convos/query?userId=${user.id}`);
-    if (user.id === "global") {
-      socket.emit("global");
-      getChat("/api/messages/global/");
+    if (user.type === "group") {
+      socket.emit("joingroup", user.id);
+      if (user.id === "global") getChat("/api/messages/global/");
+      else getChat(`/api/group/query?group=${user.id}`);
     }
   }, [user]);
 
@@ -70,9 +71,14 @@ export default function Chat() {
     e.preventDefault();
     if (text === "") return;
     let data, url;
-    if (user.id === "global") {
-      data = JSON.stringify({ data: text });
-      url = "/api/messages/global/";
+    if (user.type === "group") {
+      if (user.id === "global") {
+        data = JSON.stringify({ data: text });
+        url = "/api/messages/global/";
+      } else {
+        data = JSON.stringify({ group: user.id, data: text });
+        url = "/api/group/";
+      }
     } else {
       data = JSON.stringify({ to: user.id, data: text });
       url = "/api/messages/";
