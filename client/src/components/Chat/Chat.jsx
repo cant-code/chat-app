@@ -33,6 +33,7 @@ export default function Chat() {
 
   useEffect(() => {
     socket.on("messages", (body) => {
+      console.log(body);
       if (
         clientId.current.id === body.from ||
         localStorage.getItem("id") === body.from ||

@@ -61,7 +61,7 @@ router.post('/', (req, res) => {
                     res.sendStatus(500);
                     res.end(JSON.stringify({ error: 'Error'}));
                 } else {
-                    req.io.to(msg[0].group).emit('messages', msg[0]);
+                    req.io.to(String(msg[0].group)).emit('messages', msg[0]);
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify({ message: 'Success'}));
                 }
@@ -114,24 +114,57 @@ router.get('/', (req, res) => {
             },
         },
     ])
-    .match({ recipient: { $all: [{ $elemMatch: { $eq: from }}]}})
+    .match({ users: { $all: [{ $elemMatch: { $eq: from }}]}})
     .project({
         'fromObj.password': 0,
         'fromObj.date': 0,
     })
-    .exec((err, convos) => {
+    .exec((err, groups) => {
         if(err) {
             console.log(err);
             res.setHeader('Content-Type', 'application/json');
             res.sendStatus(500);
             res.end(JSON.stringify({ message: 'Failure' }));
-        } else res.send(convos);
+        } else res.send(groups);
     });
 });
 
 router.post('/room', (req, res) => {
     let type = req.body.type;
-
+    if (type === 'Create') {
+        let group = new Groups({
+            username: req.body.name,
+            users: [jwtUser.id]
+        });
+        group.save((err, item) => {
+            if (err) {
+                console.log(err);
+                res.setHeader('Content-Type', 'application/json');
+                res.sendStatus(500);
+                res.end(JSON.stringify({ error: 'Error' }));
+            }
+            else res.send(item);
+        });
+    }
+    else {
+        Groups.findOneAndUpdate(
+        {
+            username: req.body.name
+        },
+        {
+            username: req.body.name,
+            $addToSet: { users: jwtUser.id }
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true },
+        function(err, group) {
+            if(err) {
+                console.log(err);
+                res.setHeader('Content-Type', 'application/json');
+                res.sendStatus(500);
+                res.end(JSON.stringify({ message: 'Failure' }));
+            } else res.send(group);
+        });
+    }
 });
 
 module.exports = router;

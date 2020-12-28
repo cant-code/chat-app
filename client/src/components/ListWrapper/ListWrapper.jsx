@@ -4,6 +4,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Divider from "@material-ui/core/Divider";
 import PublicIcon from "@material-ui/icons/Public";
+import GroupIcon from "@material-ui/icons/Group";
 import AddIcon from "@material-ui/icons/Add";
 import CreateIcon from "@material-ui/icons/Create";
 import Dialog from "../Dialog/Dialog";
@@ -111,7 +112,7 @@ export default function ListWrapper(props) {
                 onClick={() => handleListItemClick(item._id, item.username)}
               >
                 <ListItemAvatar>
-                  <Avatar></Avatar>
+                  <Avatar>{list === 1 ? <GroupIcon /> : null}</Avatar>
                 </ListItemAvatar>
                 {item.username && <ListItemText primary={item.username} />}
               </ListItem>

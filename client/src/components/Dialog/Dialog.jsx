@@ -14,6 +14,25 @@ export default function FormDialog({ open, handleModal, type }) {
     handleModal("");
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const send = JSON.stringify({
+      type: type,
+      name: name,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("token")}`,
+      },
+      body: send,
+    };
+    const res = await fetch("/api/group/room/", requestOptions);
+    const data = await res.json();
+    console.log(data);
+  };
+
   return (
     <Dialog
       fullWidth
@@ -23,7 +42,7 @@ export default function FormDialog({ open, handleModal, type }) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">{type} a Room</DialogTitle>
-      <form autoComplete="off" noValidate>
+      <form autoComplete="off" noValidate onSubmit={onSubmit}>
         <DialogContent>
           <TextField
             autoFocus
