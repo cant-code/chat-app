@@ -15,12 +15,13 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import IconButton from "@material-ui/core/IconButton";
-import SnackBar from "../components/SnackBar";
 import { useStyles } from "./Form.style";
+import useSnackbar from "../hooks/SnackbarHook";
 
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
+  const { setMsg } = useSnackbar();
   const initialBodyState = {
     username: "",
     password: "",
@@ -30,9 +31,6 @@ export default function Login() {
   const [formErrors, setFormErrors] = useState(initialBodyState);
   const [showPassword, setShowPassword] = useState(false);
   const [validation, setValidation] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [type, setType] = useState("");
 
   useEffect(() => {
     async function sendForm() {
@@ -48,24 +46,17 @@ export default function Login() {
         setValidation(false);
         if (res.status === 400 || res.status === 404) {
           let str = "Error: " + data.Error;
-          setMsg(str);
-          setType("error");
+          setMsg(str, "error");
         } else {
-          setMsg("Successfully Logged In");
-          setType("success");
+          setMsg("Successfully Logged In", "success");
           localStorage.setItem("token", data.token);
           localStorage.setItem("id", data.id);
           history.push("/");
         }
-        if (!open) setOpen(true);
-        else {
-          setOpen(false);
-          setOpen(true);
-        }
       }
     }
     if (validation) sendForm();
-  }, [validation, body, formErrors, open, history]);
+  }, [validation, body, formErrors, history, setMsg]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -171,7 +162,6 @@ export default function Login() {
           </div>
         </CardContent>
       </Card>
-      <SnackBar message={msg} type={type} setPropOpen={setOpen} open={open} />
     </Container>
   );
 }
