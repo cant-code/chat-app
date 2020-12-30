@@ -10,6 +10,8 @@ export const AppBar = withStyles({
 export const useStyles = makeStyles((theme) => ({
   tabPanel: {
     backgroundColor: theme.palette.grey[900],
-    height: "inherit",
+    [theme.breakpoints.down("sm")]: {
+      height: "inherit",
+    },
   },
 }));
