@@ -13,4 +13,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     backgroundColor: theme.palette.grey[900],
   },
+  dialog: {
+    height: "100%",
+  },
 }));
