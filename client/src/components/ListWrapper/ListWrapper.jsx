@@ -50,11 +50,8 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
       try {
         const res = await fetch(url, requestOptions);
         const data = await res.json();
-        console.log(data, res);
-      } catch (e) {
-        console.log(e);
-      }
-      // setUsers(data);
+        setUsers(data);
+      } catch (e) {}
       setLoader(false);
     }
     if (list === 0) getUsers("/api/users/");
