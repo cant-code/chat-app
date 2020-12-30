@@ -43,6 +43,7 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
           Authorization: `${localStorage.getItem("token")}`,
         },
       };
