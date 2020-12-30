@@ -48,6 +48,7 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
       };
       const res = await fetch(url, requestOptions);
       const data = await res.json();
+      console.log(data, res);
       setUsers(data);
       setLoader(false);
     }
