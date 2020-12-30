@@ -15,7 +15,7 @@ function TabPanel(props) {
 
 export default function IconLabelTabs() {
   const [value, setValue] = React.useState(0);
-  const [loader, setLoader] = React.useState(false);
+  const [loader, setLoader] = React.useState(true);
 
   const handleChange = (event, newValue) => {
     setLoader(true);
