@@ -8,6 +8,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { SidebarContext } from "../context/sidebar";
+import SocketContext from "../context/socket";
+import { ChatContext } from "../context/chat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,9 +26,13 @@ const useStyles = makeStyles((theme) => ({
 export default function ButtonAppBar({ selected }) {
   const classes = useStyles();
   const history = useHistory();
+  const socket = useContext(SocketContext);
   const { open, setOpen } = useContext(SidebarContext);
+  const { setUser } = useContext(ChatContext);
 
   const logout = () => {
+    socket.close();
+    setUser({});
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     history.push("/login");

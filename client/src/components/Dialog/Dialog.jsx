@@ -5,9 +5,11 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import useSnackbar from "../../hooks/SnackbarHook";
 
-export default function FormDialog({ open, handleModal, type }) {
+export default function FormDialog({ open, handleModal, type, setUsers }) {
   const [name, setName] = useState("");
+  const { setMsg } = useSnackbar();
 
   const closeDialog = () => {
     setName("");
@@ -30,7 +32,11 @@ export default function FormDialog({ open, handleModal, type }) {
     };
     const res = await fetch("/api/group/room/", requestOptions);
     const data = await res.json();
-    console.log(data);
+    if (res.status === 200) {
+      setUsers((m) => [...m, data]);
+      setMsg("Successfully created room", "success");
+      closeDialog();
+    } else setMsg(data.error, "error");
   };
 
   return (

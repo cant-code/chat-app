@@ -127,7 +127,12 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
             ))}
         </List>
       )}
-      <Dialog open={open} handleModal={handleModal} type={dialogType} />
+      <Dialog
+        open={open}
+        handleModal={handleModal}
+        type={dialogType}
+        setUsers={setUsers}
+      />
     </div>
   );
 }

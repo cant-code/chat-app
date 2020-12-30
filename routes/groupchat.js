@@ -138,31 +138,46 @@ router.post('/room', (req, res) => {
         });
         group.save((err, item) => {
             if (err) {
-                console.log(err);
-                res.setHeader('Content-Type', 'application/json');
-                res.sendStatus(500);
-                res.end(JSON.stringify({ error: 'Error' }));
-            }
-            else res.send(item);
+                if (err.code === 11000)
+                res.status(500).send(JSON.stringify({ error: 'Room already exists' }));
+            } else res.status(200).send(item);
         });
     }
     else {
-        Groups.findOneAndUpdate(
-        {
-            username: req.body.name
-        },
-        {
-            username: req.body.name,
-            $addToSet: { users: jwtUser.id }
-        },
-        { upsert: true, new: true, setDefaultsOnInsert: true },
-        function(err, group) {
-            if(err) {
-                console.log(err);
-                res.setHeader('Content-Type', 'application/json');
-                res.sendStatus(500);
-                res.end(JSON.stringify({ message: 'Failure' }));
-            } else res.send(group);
+        Groups.aggregate([
+            {
+                $match: {
+                    username: req.body.name,
+                    users: {
+                        $in: [mongoose.Types.ObjectId(jwtUser.id), "$users"]
+                    }
+                }
+            }
+        ])
+        .exec((err, result) => {
+            if (result.length > 0)
+                res.status(400).send(JSON.stringify({ error: 'You have already joined this group' }));
+            else {
+                Groups.findOneAndUpdate(
+                {
+                    username: req.body.name
+                },
+                {
+                    username: req.body.name,
+                    $addToSet: { users: jwtUser.id }
+                },
+                { new: true, setDefaultsOnInsert: true },
+                function(err, group) {
+                    if(err) {
+                        console.log(err);
+                        res.setHeader('Content-Type', 'application/json');
+                        res.sendStatus(500);
+                        res.end(JSON.stringify({ message: 'Failure' }));
+                    } else {
+                        if (group === null) res.status(400).send(JSON.stringify({ error: 'Room not found' }));
+                        else res.status(200).send(group);}
+                });
+            }
         });
     }
 });
