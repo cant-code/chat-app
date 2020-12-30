@@ -7,15 +7,16 @@ import PublicIcon from "@material-ui/icons/Public";
 import GroupIcon from "@material-ui/icons/Group";
 import AddIcon from "@material-ui/icons/Add";
 import CreateIcon from "@material-ui/icons/Create";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "../Dialog/Dialog";
 import SocketContext from "../../context/socket";
 import { ChatContext } from "../../context/chat";
 import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
-export default function ListWrapper(props) {
+export default function ListWrapper({ currSelected, loader, setLoader }) {
   const classes = useStyles();
   const { user, setUser } = useContext(ChatContext);
-  const list = props.selected;
+  const list = currSelected;
   const [selected, setSelected] = useState(user.id);
   const [users, setUsers] = useState([]);
   const socket = useContext(SocketContext);
@@ -47,79 +48,85 @@ export default function ListWrapper(props) {
       };
       const res = await fetch(url, requestOptions);
       const data = await res.json();
-      console.log(data);
       setUsers(data);
+      setLoader(false);
     }
     if (list === 0) getUsers("/api/users/");
     else if (list === 1) getUsers("/api/group/");
-  }, [list]);
+  }, [list, setLoader]);
 
   return (
     <div className={classes.root}>
-      <List
-        component="nav"
-        style={{
-          maxHeight: "79vh",
-          paddingTop: 0,
-          overflow: "auto",
-        }}
-        aria-label="main mailbox folders"
-      >
-        <Divider />
-        {list === 1 && (
-          <React.Fragment>
-            <ListItem button dense onClick={() => handleModal("Create")}>
-              <ListItemAvatar>
-                <Avatar>
-                  <CreateIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Create new Room" />
-            </ListItem>
-            <Divider />
-            <ListItem button dense onClick={() => handleModal("Join")}>
-              <ListItemAvatar>
-                <Avatar>
-                  <AddIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Join a Room" />
-            </ListItem>
-            <Divider />
-            <ListItem
-              button
-              dense
-              selected={selected === "global"}
-              onClick={() => handleListItemClick("global", "Global")}
-            >
-              <ListItemAvatar>
-                <Avatar>
-                  <PublicIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Global" />
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        )}
-        {users.length > 0 &&
-          users.map((item) => (
-            <React.Fragment key={item._id}>
+      {loader ? (
+        <div className={classes.loader}>
+          <CircularProgress color="secondary" />
+        </div>
+      ) : (
+        <List
+          component="nav"
+          style={{
+            maxHeight: "79vh",
+            paddingTop: 0,
+            overflow: "auto",
+          }}
+          aria-label="main mailbox folders"
+        >
+          <Divider />
+          {list === 1 && (
+            <React.Fragment>
+              <ListItem button dense onClick={() => handleModal("Create")}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <CreateIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Create new Room" />
+              </ListItem>
+              <Divider />
+              <ListItem button dense onClick={() => handleModal("Join")}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <AddIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Join a Room" />
+              </ListItem>
+              <Divider />
               <ListItem
                 button
                 dense
-                selected={selected === item._id}
-                onClick={() => handleListItemClick(item._id, item.username)}
+                selected={selected === "global"}
+                onClick={() => handleListItemClick("global", "Global")}
               >
                 <ListItemAvatar>
-                  <Avatar>{list === 1 ? <GroupIcon /> : null}</Avatar>
+                  <Avatar>
+                    <PublicIcon />
+                  </Avatar>
                 </ListItemAvatar>
-                {item.username && <ListItemText primary={item.username} />}
+                <ListItemText primary="Global" />
               </ListItem>
               <Divider />
             </React.Fragment>
-          ))}
-      </List>
+          )}
+          {users.length > 0 &&
+            users.map((item) => (
+              <React.Fragment key={item._id}>
+                <ListItem
+                  button
+                  dense
+                  selected={selected === item._id}
+                  onClick={() => handleListItemClick(item._id, item.username)}
+                >
+                  <ListItemAvatar>
+                    <Avatar>{list === 1 ? <GroupIcon /> : null}</Avatar>
+                  </ListItemAvatar>
+                  {item.username && <ListItemText primary={item.username} />}
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))}
+        </List>
+      )}
       <Dialog open={open} handleModal={handleModal} type={dialogType} />
     </div>
   );

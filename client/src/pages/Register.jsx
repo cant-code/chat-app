@@ -15,12 +15,13 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import IconButton from "@material-ui/core/IconButton";
-import SnackBar from "../components/SnackBar";
 import { useStyles } from "./Form.style";
+import useSnackbar from "../hooks/SnackbarHook";
 
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
+  const { setMsg } = useSnackbar();
 
   const initialBodyState = {
     email: "",
@@ -33,9 +34,6 @@ export default function Login() {
   const [formErrors, setFormErrors] = useState(initialBodyState);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [type, setType] = useState("");
   const [validating, setValidate] = useState(false);
 
   useEffect(() => {
@@ -57,23 +55,15 @@ export default function Login() {
         setValidate(false);
         if (res.status === 400) {
           let str = "Error: " + data.error;
-          setMsg(str);
-          setType("error");
+          setMsg(str, "error");
         } else {
-          setMsg("Successfully Registered");
-          setType("success");
+          setMsg("Successfully Registered", "success");
           history.push("/login");
-        }
-        console.log(data);
-        if (!open) setOpen(true);
-        else {
-          setOpen(false);
-          setOpen(true);
         }
       }
     }
     if (validating) sendForm();
-  }, [validating, body, formErrors, open, history]);
+  }, [validating, body, formErrors, history, setMsg]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -228,7 +218,6 @@ export default function Login() {
           </div>
         </CardContent>
       </Card>
-      <SnackBar message={msg} type={type} setPropOpen={setOpen} open={open} />
     </Container>
   );
 }

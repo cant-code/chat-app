@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
-// import ScrollToBottom from "../ScrollToBottom/ScrollToBottom";
 import { ChatContext } from "../../context/chat";
 import SocketContext from "../../context/socket";
 
@@ -33,7 +32,6 @@ export default function Chat() {
 
   useEffect(() => {
     socket.on("messages", (body) => {
-      console.log(body);
       if (
         clientId.current.id === body.from ||
         localStorage.getItem("id") === body.from ||
@@ -158,9 +156,6 @@ export default function Chat() {
                   </Grid>
                 ))}
             </Grid>
-            {/* {msgs.length > 0 && (
-              <ScrollToBottom lastId={fieldRef} target={currWindow} />
-            )} */}
           </Box>
           <Grid className={classes.sendMsg}>
             <form autoComplete="off" noValidate onSubmit={submitMsg}>

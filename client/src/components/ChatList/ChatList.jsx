@@ -15,8 +15,10 @@ function TabPanel(props) {
 
 export default function IconLabelTabs() {
   const [value, setValue] = React.useState(0);
+  const [loader, setLoader] = React.useState(false);
 
   const handleChange = (event, newValue) => {
+    setLoader(true);
     setValue(newValue);
   };
 
@@ -39,7 +41,11 @@ export default function IconLabelTabs() {
         </Tabs>
       </AppBar>
       <TabPanel className={classes.tabPanel} index={value} value={value}>
-        <ListWrapper selected={value} />
+        <ListWrapper
+          currSelected={value}
+          loader={loader}
+          setLoader={setLoader}
+        />
       </TabPanel>
     </>
   );

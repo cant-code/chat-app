@@ -9,6 +9,11 @@ export const useStyles = makeStyles((theme) => ({
     maxHeight: "86%",
     backgroundColor: theme.palette.grey[900],
   },
+  loader: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "2em",
+  },
 }));
 
 export const ListItem = withStyles((theme) => ({
