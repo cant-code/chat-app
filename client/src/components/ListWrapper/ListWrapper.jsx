@@ -47,10 +47,14 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
           Authorization: `${localStorage.getItem("token")}`,
         },
       };
-      const res = await fetch(url, requestOptions);
-      const data = await res.json();
-      console.log(data, res);
-      setUsers(data);
+      try {
+        const res = await fetch(url, requestOptions);
+        const data = await res.json();
+        console.log(data, res);
+      } catch (e) {
+        console.log(e);
+      }
+      // setUsers(data);
       setLoader(false);
     }
     if (list === 0) getUsers("/api/users/");
