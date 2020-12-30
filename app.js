@@ -9,6 +9,7 @@ const users = require('./routes/users');
 const messages = require('./routes/messages');
 const groups = require('./routes/groupchat');
 var clients = require('./utils/clientData');
+var path = require('path');
 
 dotenv.config();
 const app = express();
