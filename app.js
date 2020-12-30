@@ -24,13 +24,6 @@ const server = app.listen(port, () => {
     console.log('Server is up on port' + port);
 });
 
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  app.use(express.static('client/build'));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  });
-}
-
 const io = require('socket.io')(server);
 
 io.on("connection", (socket) => {
@@ -70,3 +63,10 @@ app.use(function (req, res, next) {
 app.use('/api/users', users);
 app.use('/api/messages', messages);
 app.use('/api/group', groups);
+
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+  app.use(express.static('client/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+  });
+}
