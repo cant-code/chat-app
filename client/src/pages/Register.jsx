@@ -37,6 +37,10 @@ export default function Login() {
   const [validating, setValidate] = useState(false);
 
   useEffect(() => {
+    if (localStorage.getItem("token")) history.push("/");
+  }, []);
+
+  useEffect(() => {
     async function sendForm() {
       if (
         !formErrors.email.length &&

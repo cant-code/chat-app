@@ -33,6 +33,10 @@ export default function Login() {
   const [validation, setValidation] = useState(false);
 
   useEffect(() => {
+    if (localStorage.getItem("token")) history.push("/");
+  }, []);
+
+  useEffect(() => {
     async function sendForm() {
       if (!formErrors.username.length && !formErrors.password.length) {
         const { username, password } = body;
