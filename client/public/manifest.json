@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Eta Chat",
+  "name": "Eta Chat, the old Chat app",
   "icons": [
     {
       "src": "favicon.ico",

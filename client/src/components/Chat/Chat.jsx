@@ -135,7 +135,7 @@ export default function Chat() {
                     >
                       <Grid container wrap="nowrap" spacing={2}>
                         <Grid item>
-                          {user.type === "group" && (
+                          {user.type === "group" && m.fromObj && (
                             <Tooltip title={m.fromObj[0].username} arrow>
                               <Avatar className={classes.userAvatar}>
                                 {m.fromObj[0].username[0]}
