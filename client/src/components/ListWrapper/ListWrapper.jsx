@@ -8,23 +8,29 @@ import GroupIcon from "@material-ui/icons/Group";
 import AddIcon from "@material-ui/icons/Add";
 import CreateIcon from "@material-ui/icons/Create";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
 import Dialog from "../Dialog/Dialog";
 import SocketContext from "../../context/socket";
 import { ChatContext } from "../../context/chat";
+import { SidebarContext } from "../../context/sidebar";
 import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
 export default function ListWrapper({ currSelected, loader, setLoader }) {
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
   const { user, setUser } = useContext(ChatContext);
+  const { setOpen } = useContext(SidebarContext);
   const list = currSelected;
   const [selected, setSelected] = useState(user.id);
   const [users, setUsers] = useState([]);
   const socket = useContext(SocketContext);
-  const [open, setOpen] = useState(false);
+  const [open, setModal] = useState(false);
   const [dialogType, setDialog] = useState("");
 
   const handleModal = (type) => {
-    setOpen((m) => !m);
+    setModal((m) => !m);
     setDialog(type);
   };
 
@@ -35,6 +41,7 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
     let type = list === 0 ? "chat" : "group";
     setSelected(id);
     setUser({ id, username, type });
+    if (mobile) setOpen(false);
   };
 
   useEffect(() => {
