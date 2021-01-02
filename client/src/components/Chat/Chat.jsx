@@ -2,15 +2,13 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { useStyles } from "./Chat.style";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import SendIcon from "@material-ui/icons/Send";
 import Avatar from "@material-ui/core/Avatar";
 import ForumIcon from "@material-ui/icons/Forum";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
+import ChatBar from "../ChatBar/ChatBar";
 import { ChatContext } from "../../context/chat";
 import SocketContext from "../../context/socket";
 
@@ -21,7 +19,6 @@ export default function Chat() {
   clientId.current = user;
   const socket = useContext(SocketContext);
   const [msgs, setMsgs] = useState([]);
-  const [text, setText] = useState("");
   const userId = localStorage.getItem("id");
   const fieldRef = useRef(null);
   const currWindow = useRef(null);
@@ -65,34 +62,6 @@ export default function Chat() {
       else getChat(`/api/group/query?group=${user.id}`);
     }
   }, [user]);
-
-  const submitMsg = async (e) => {
-    e.preventDefault();
-    if (text === "") return;
-    let data, url;
-    if (user.type === "group") {
-      if (user.id === "global") {
-        data = JSON.stringify({ data: text });
-        url = "/api/messages/global/";
-      } else {
-        data = JSON.stringify({ group: user.id, data: text });
-        url = "/api/group/";
-      }
-    } else {
-      data = JSON.stringify({ to: user.id, data: text });
-      url = "/api/messages/";
-    }
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${localStorage.getItem("token")}`,
-      },
-      body: data,
-    };
-    const res = await fetch(url, requestOptions);
-    setText("");
-  };
 
   const handleScroll = () => {
     if (fieldRef.current !== null)
@@ -158,31 +127,7 @@ export default function Chat() {
             </Grid>
           </Box>
           <Grid className={classes.sendMsg}>
-            <form autoComplete="off" noValidate onSubmit={submitMsg}>
-              <Grid container>
-                <Grid item xs={11}>
-                  <TextField
-                    disabled={user.username ? false : true}
-                    onChange={(e) => setText(e.target.value)}
-                    value={text}
-                    id="msg"
-                    label="Type your message..."
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={1} className={classes.send}>
-                  <IconButton
-                    type="submit"
-                    aria-label="add an alarm"
-                    disabled={user.username ? false : true}
-                  >
-                    <SendIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </form>
+            <ChatBar user={user} />
           </Grid>
         </Container>
       </Grid>

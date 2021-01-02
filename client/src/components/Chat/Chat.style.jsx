@@ -59,9 +59,6 @@ export const useStyles = makeStyles((theme) => ({
     height: "10%",
     width: "100%",
   },
-  send: {
-    display: "flex",
-  },
   backgroundPrimary: {
     backgroundColor: theme.palette.primary.dark,
   },
