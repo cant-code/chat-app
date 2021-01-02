@@ -33,7 +33,7 @@ export default function ChatBar({ user }) {
       },
       body: data,
     };
-    const res = await fetch(url, requestOptions);
+    await fetch(url, requestOptions);
     setText("");
   };
 
@@ -55,7 +55,7 @@ export default function ChatBar({ user }) {
         <Grid item xs={1} className={classes.send}>
           <IconButton
             type="submit"
-            aria-label="add an alarm"
+            aria-label="Send"
             disabled={user.username ? false : true}
           >
             <SendIcon />
