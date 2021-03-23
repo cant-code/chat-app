@@ -54,6 +54,9 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "flex-end",
     overflowY: "auto",
+    [theme.breakpoints.down("sm")]: {
+      height: "76%",
+    },
   },
   sendMsg: {
     height: "10%",
