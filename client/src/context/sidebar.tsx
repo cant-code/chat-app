@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 
-export const SidebarContext = React.createContext({
+interface SideBar {
+  open: {};
+  setOpen: React.Dispatch<SetStateAction<{}>>;
+}
+
+export const SidebarContext = React.createContext<SideBar>({
   open: true,
   setOpen: () => {},
 });
 
-const SidebarProvider = ({ children }) => {
+const SidebarProvider: React.FC<{children: any}> = ({ children }) => {
   const [open, setOpen] = useState({});
 
   return (

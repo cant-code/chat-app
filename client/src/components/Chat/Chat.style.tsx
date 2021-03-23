@@ -8,9 +8,9 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       paddingRight: 0,
     },
-    background: "#000000",
+    // background: "#000000",
     // eslint-disable-next-line
-    background: "-webkit-linear-gradient(to top, #434343, #000000)",
+    // background: "-webkit-linear-gradient(to top, #434343, #000000)",
     // eslint-disable-next-line
     background: "linear-gradient(to top, #434343, #000000)",
   },

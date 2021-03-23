@@ -16,7 +16,13 @@ import { ChatContext } from "../../context/chat";
 import { SidebarContext } from "../../context/sidebar";
 import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
 
-export default function ListWrapper({ currSelected, loader, setLoader }) {
+interface ListWrapperProps {
+  currSelected: number;
+  loader: boolean;
+  setLoader: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoader }) => {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
@@ -24,17 +30,17 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
   const { setOpen } = useContext(SidebarContext);
   const list = currSelected;
   const [selected, setSelected] = useState(user.id);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
   const socket = useContext(SocketContext);
   const [open, setModal] = useState(false);
   const [dialogType, setDialog] = useState("");
 
-  const handleModal = (type) => {
+  const handleModal = (type: string) => {
     setModal((m) => !m);
     setDialog(type);
   };
 
-  const handleListItemClick = (id, username) => {
+  const handleListItemClick = (id: string, username: string) => {
     if (user.type === "group") {
       socket.emit("endgroup", id);
     }
@@ -45,7 +51,7 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
   };
 
   useEffect(() => {
-    async function getUsers(url) {
+    async function getUsers(url: string) {
       const requestOptions = {
         method: "GET",
         headers: {
@@ -119,7 +125,7 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
             </React.Fragment>
           )}
           {users.length > 0 &&
-            users.map((item) => (
+            users.map((item: any) => (
               <React.Fragment key={item._id}>
                 <ListItem
                   button
@@ -146,3 +152,5 @@ export default function ListWrapper({ currSelected, loader, setLoader }) {
     </div>
   );
 }
+
+export default ListWrapper;

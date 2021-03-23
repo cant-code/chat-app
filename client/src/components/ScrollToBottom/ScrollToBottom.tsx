@@ -5,7 +5,12 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import Zoom from "@material-ui/core/Zoom";
 import { useStyles } from "./ScrollToBottom.style";
 
-function ScrollToBottom({ lastId, target }) {
+interface Scroll {
+  lastId: React.RefObject<HTMLDivElement>;
+  target: React.RefObject<HTMLDivElement>;
+}
+
+const ScrollToBottom: React.FC<Scroll> = ({ lastId, target }) => {
   const classes = useStyles();
 
   const trigger = useScrollTrigger({
@@ -14,8 +19,8 @@ function ScrollToBottom({ lastId, target }) {
     target: target.current ? target.current : window,
   });
 
-  const handleClick = (event) => {
-    lastId.current.scrollIntoView({ behavior: "smooth", block: "end" });
+  const handleClick = (event: React.MouseEvent) => {
+    lastId?.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   };
 
   return (
@@ -31,6 +36,6 @@ function ScrollToBottom({ lastId, target }) {
       </div>
     </Zoom>
   );
-}
+};
 
 export default ScrollToBottom;

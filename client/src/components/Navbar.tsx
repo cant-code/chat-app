@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar({ selected }) {
+export default function ButtonAppBar() {
   const classes = useStyles();
   const history = useHistory();
   const socket = useContext(SocketContext);

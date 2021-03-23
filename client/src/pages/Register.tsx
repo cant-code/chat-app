@@ -69,7 +69,7 @@ export default function Login() {
     if (validating) sendForm();
   }, [validating, body, formErrors, history, setMsg]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleValidation();
   };
@@ -89,7 +89,7 @@ export default function Login() {
     setValidate(true);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setBody({
       ...body,

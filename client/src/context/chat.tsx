@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 
-export const ChatContext = React.createContext({
-  user: {},
+interface Chat {
+  user: User;
+  setUser: Function;
+};
+
+export type User = {
+  id: string,
+  username: string,
+  type: string
+};
+
+export const ChatContext = React.createContext<Chat>({
+  user: {id: "", username: "", type: ""},
   setUser: () => {},
 });
 
-const ChatProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+const ChatProvider: React.FC<{children: any}> = ({ children }) => {
+  const [user, setUser] = useState<User>({id: "", username: "", type: ""});
 
   const value = React.useMemo(
     () => ({

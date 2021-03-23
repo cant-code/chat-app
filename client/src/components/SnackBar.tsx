@@ -28,7 +28,7 @@ export default function DisplaySnackBar() {
   const { msg, removeMsg } = useSnackbar();
 
   useEffect(() => {
-    if (msg !== null && msg.message.length > 0) setOpen(true);
+    if (msg !== null && msg.msg.length > 0) setOpen(true);
   }, [msg]);
 
   const handleClose = () => {
@@ -36,7 +36,7 @@ export default function DisplaySnackBar() {
     setOpen(false);
   };
 
-  function TransitionLeft(props) {
+  function TransitionLeft(props: any) {
     return <Slide {...props} direction="left" />;
   }
 
@@ -70,7 +70,7 @@ export default function DisplaySnackBar() {
                         style={{ marginRight: "0.3em", fontSize: "1.4em" }}
                       />
                     )}
-                    {msg.message}
+                    {msg.msg}
                   </div>
                 </>
               )

@@ -3,13 +3,18 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from "@material-ui/icons/Send";
+import { User } from "../../context/chat";
 import { useStyles } from "./ChatBar.style";
 
-export default function ChatBar({ user }) {
+type prop = {
+  user: User;
+};
+
+const ChatBar: React.FC<prop> = ({ user }) => {
   const [text, setText] = useState("");
   const classes = useStyles();
 
-  const submitMsg = async (e) => {
+  const submitMsg = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text === "") return;
     let data, url;
@@ -65,3 +70,5 @@ export default function ChatBar({ user }) {
     </form>
   );
 }
+
+export default ChatBar;
