@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import Grid, { GridClassKey } from "@material-ui/core/Grid";
+import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { useStyles } from "./Chat.style";
 import Avatar from "@material-ui/core/Avatar";
@@ -9,6 +9,7 @@ import Box, { BoxProps } from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import ChatBar from "../ChatBar/ChatBar";
+import ScrollToBottom from '../ScrollToBottom/ScrollToBottom';
 import { ChatContext, User } from "../../context/chat";
 import SocketContext from "../../context/socket";
 
@@ -54,7 +55,7 @@ const Chat: React.FC = () => {
       setMsgs(data);
       handleScroll();
     }
-    if (Object.entries(user).length !== 0 && user.type !== "group")
+    if (user.type !== "group" && user.id !== "")
       getChat(`/api/messages/convos/query?userId=${user.id}`);
     if (user.type === "group") {
       socket.emit("joingroup", user.id);
@@ -124,6 +125,7 @@ const Chat: React.FC = () => {
                   </Grid>
                 ))}
             </Grid>
+            <ScrollToBottom lastId={fieldRef} target={currWindow} />
           </Box>
           <Grid className={classes.sendMsg}>
             <ChatBar user={user} />

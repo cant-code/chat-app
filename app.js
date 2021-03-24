@@ -29,11 +29,13 @@ const io = require('socket.io')(server);
 io.on("connection", (socket) => {
     socket.on('clientInfo', (data) => {
         clients[data.id] = socket.id;
+        io.emit("userlist", Object.keys(clients));
     });
     socket.on('disconnect', () => {
         for (let i in clients) {
             if (clients[i] === socket.id) delete clients[i];
         }
+        io.emit("userlist", Object.keys(clients));
         for (let i in socket.rooms) socket.leave(i);
     });
     socket.on('joingroup', (item) => {

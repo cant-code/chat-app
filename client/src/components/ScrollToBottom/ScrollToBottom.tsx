@@ -15,7 +15,7 @@ const ScrollToBottom: React.FC<Scroll> = ({ lastId, target }) => {
 
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 1000,
+    threshold: -100,
     target: target.current ? target.current : window,
   });
 

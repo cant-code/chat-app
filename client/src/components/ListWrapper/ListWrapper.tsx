@@ -14,7 +14,7 @@ import Dialog from "../Dialog/Dialog";
 import SocketContext from "../../context/socket";
 import { ChatContext } from "../../context/chat";
 import { SidebarContext } from "../../context/sidebar";
-import { useStyles, ListItem, Avatar } from "./ListWrapper.style";
+import { useStyles, ListItem, Avatar, StyledBadge } from "./ListWrapper.style";
 
 interface ListWrapperProps {
   currSelected: number;
@@ -31,6 +31,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
   const list = currSelected;
   const [selected, setSelected] = useState(user.id);
   const [users, setUsers] = useState<any[]>([]);
+  const [online, setOnline] = useState<any[]>([]);
   const socket = useContext(SocketContext);
   const [open, setModal] = useState(false);
   const [dialogType, setDialog] = useState("");
@@ -70,6 +71,15 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
     if (list === 0) getUsers("/api/users/");
     else if (list === 1) getUsers("/api/group/");
   }, [list, setLoader]);
+
+  useEffect(() => {
+    socket.on("users", (body: any) => {
+      setUsers(d => [...d, body]);
+    });
+    socket.on("userlist", (body: any) => {
+      setOnline(body);
+    });
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -134,7 +144,20 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
                   onClick={() => handleListItemClick(item._id, item.username)}
                 >
                   <ListItemAvatar>
-                    <Avatar>{list === 1 ? <GroupIcon /> : null}</Avatar>
+                    {online.includes(item._id) ? (
+                      <StyledBadge
+                        overlap="circle"
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right'
+                        }}
+                        variant="dot"
+                        >
+                          <Avatar>{list === 1 ? <GroupIcon /> : null}</Avatar>
+                        </StyledBadge>
+                    ) : (
+                        <Avatar>{list === 1 ? <GroupIcon /> : null}</Avatar>
+                    )}
                   </ListItemAvatar>
                   {item.username && <ListItemText primary={item.username} />}
                 </ListItem>
