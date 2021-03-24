@@ -7,17 +7,24 @@ import ListWrapper from "../ListWrapper/ListWrapper";
 import Box from "@material-ui/core/Box";
 import { AppBar, useStyles } from "./ChatList.style";
 
-function TabPanel(props) {
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+  className: any;
+}
+
+function TabPanel(props: TabPanelProps) {
   const { children, index, value, ...other } = props;
 
   return <div {...other}>{value === index && <Box>{children}</Box>}</div>;
 }
 
-export default function IconLabelTabs() {
-  const [value, setValue] = React.useState(0);
-  const [loader, setLoader] = React.useState(true);
+const IconLabelTabs: React.FC = () => {
+  const [value, setValue] = React.useState<number>(0);
+  const [loader, setLoader] = React.useState<boolean>(true);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setLoader(true);
     setValue(newValue);
   };
@@ -50,3 +57,5 @@ export default function IconLabelTabs() {
     </>
   );
 }
+
+export default IconLabelTabs;

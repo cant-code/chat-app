@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -9,8 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Avatar from "@material-ui/core/Avatar";
 import TextField from "@material-ui/core/TextField";
-import { Link } from "react-router-dom";
 import Linking from "@material-ui/core/Link";
+import { Link } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -22,19 +22,15 @@ export default function Login() {
   const classes = useStyles();
   const history = useHistory();
   const { setMsg } = useSnackbar();
-
   const initialBodyState = {
-    email: "",
     username: "",
     password: "",
-    password2: "",
   };
 
   const [body, setBody] = useState(initialBodyState);
   const [formErrors, setFormErrors] = useState(initialBodyState);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [validating, setValidate] = useState(false);
+  const [validation, setValidation] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("token")) history.push("/");
@@ -42,54 +38,45 @@ export default function Login() {
 
   useEffect(() => {
     async function sendForm() {
-      if (
-        !formErrors.email.length &&
-        !formErrors.username.length &&
-        !formErrors.password.length &&
-        !formErrors.password2.length
-      ) {
-        const { email, username, password, password2 } = body;
+      if (!formErrors.username.length && !formErrors.password.length) {
+        const { username, password } = body;
         const requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, username, password, password2 }),
+          body: JSON.stringify({ username, password }),
         };
-        const res = await fetch(`/api/users/register`, requestOptions);
+        const res = await fetch(`/api/users/login`, requestOptions);
         const data = await res.json();
-        setValidate(false);
-        if (res.status === 400) {
-          let str = "Error: " + data.error;
+        setValidation(false);
+        if (res.status === 400 || res.status === 404) {
+          let str = "Error: " + data.Error;
           setMsg(str, "error");
         } else {
-          setMsg("Successfully Registered", "success");
-          history.push("/login");
+          setMsg("Successfully Logged In", "success");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("id", data.id);
+          history.push("/");
         }
       }
     }
-    if (validating) sendForm();
-  }, [validating, body, formErrors, history, setMsg]);
+    if (validation) sendForm();
+  }, [validation, body, formErrors, history, setMsg]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleValidation();
   };
 
   const handleValidation = () => {
     setFormErrors(initialBodyState);
-    const email = /.+@.+\..+/;
-    const pass = /^\S{6,}$/;
-    const errors = { email: "", username: "", password: "", password2: "" };
-    if (!email.test(body.email)) errors.email = "Please enter a valid email";
+    const errors = { username: "", password: "" };
     if (body.username.length === 0) errors.username = "This field is required";
-    if (!pass.test(body.password))
-      errors.password = "Password should contain atleast 6 characters";
-    if (body.password !== body.password2)
-      errors.password2 = "Password do not match";
+    if (body.password.length === 0) errors.password = "This field is required";
     setFormErrors(errors);
-    setValidate(true);
+    setValidation(true);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setBody({
       ...body,
@@ -101,10 +88,6 @@ export default function Login() {
     setShowPassword(!showPassword);
   };
 
-  const handleShowConfirm = () => {
-    setShowConfirm(!showConfirm);
-  };
-
   return (
     <Container maxWidth="sm">
       <Card className={classes.root} variant="outlined">
@@ -114,7 +97,7 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Register
+              Sign in
             </Typography>
             <form
               className={classes.form}
@@ -127,20 +110,6 @@ export default function Login() {
                 margin="normal"
                 required={true}
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                value={body.email}
-                onChange={handleChange}
-                error={formErrors.email.length > 0 ? true : false}
-                helperText={formErrors.email}
-                autoFocus
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required={true}
-                fullWidth
                 id="username"
                 label="Username"
                 name="username"
@@ -148,11 +117,12 @@ export default function Login() {
                 onChange={handleChange}
                 error={formErrors.username.length > 0 ? true : false}
                 helperText={formErrors.username}
+                autoFocus
               />
               <TextField
                 variant="outlined"
                 margin="normal"
-                required={true}
+                required
                 fullWidth
                 name="password"
                 label="Password"
@@ -175,32 +145,6 @@ export default function Login() {
                   ),
                 }}
               />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required={true}
-                fullWidth
-                name="password2"
-                label="Confirm Password"
-                type={showConfirm ? "text" : "password"}
-                id="password2"
-                value={body.password2}
-                onChange={handleChange}
-                error={formErrors.password2.length > 0 ? true : false}
-                helperText={formErrors.password2}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleShowConfirm}
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
               <Button
                 type="submit"
                 fullWidth
@@ -208,13 +152,13 @@ export default function Login() {
                 color="primary"
                 className={classes.submit}
               >
-                Register
+                Sign In
               </Button>
               <Grid container>
                 <Grid item xs></Grid>
                 <Grid item>
-                  <Linking component={Link} to="/" variant="body2">
-                    Already have an account? Sign in
+                  <Linking component={Link} to="/register" variant="body2">
+                    Don't have an account? Sign Up
                   </Linking>
                 </Grid>
               </Grid>

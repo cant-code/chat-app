@@ -5,34 +5,35 @@ import { useStyles } from "./Chat.style";
 import Avatar from "@material-ui/core/Avatar";
 import ForumIcon from "@material-ui/icons/Forum";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import Box, { BoxProps } from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import ChatBar from "../ChatBar/ChatBar";
-import { ChatContext } from "../../context/chat";
+import ScrollToBottom from '../ScrollToBottom/ScrollToBottom';
+import { ChatContext, User } from "../../context/chat";
 import SocketContext from "../../context/socket";
 
-export default function Chat() {
+const Chat: React.FC = () => {
   const classes = useStyles();
   const { user } = useContext(ChatContext);
-  const clientId = useRef();
+  const clientId = useRef<User>();
   clientId.current = user;
   const socket = useContext(SocketContext);
-  const [msgs, setMsgs] = useState([]);
+  const [msgs, setMsgs] = useState<string[]>([]);
   const userId = localStorage.getItem("id");
-  const fieldRef = useRef(null);
-  const currWindow = useRef(null);
+  const fieldRef = useRef<HTMLDivElement>(null);
+  const currWindow = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     socket.emit("clientInfo", { id: localStorage.getItem("id") });
   }, []);
 
   useEffect(() => {
-    socket.on("messages", (body) => {
+    socket.on("messages", (body: any) => {
       if (
-        clientId.current.id === body.from ||
+        clientId!.current!.id === body?.from ||
         localStorage.getItem("id") === body.from ||
-        clientId.current.type === "group"
+        clientId!.current!.type === "group"
       ) {
         setMsgs((m) => [...m, body]);
         handleScroll();
@@ -41,7 +42,7 @@ export default function Chat() {
   }, [clientId]);
 
   useEffect(() => {
-    async function getChat(url) {
+    async function getChat(url: string) {
       const requestOptions = {
         method: "GET",
         headers: {
@@ -54,7 +55,7 @@ export default function Chat() {
       setMsgs(data);
       handleScroll();
     }
-    if (Object.entries(user).length !== 0 && user.type !== "group")
+    if (user.type !== "group" && user.id !== "")
       getChat(`/api/messages/convos/query?userId=${user.id}`);
     if (user.type === "group") {
       socket.emit("joingroup", user.id);
@@ -84,10 +85,10 @@ export default function Chat() {
           </Grid>
         </Grid>
         <Container maxWidth={false} className={classes.container}>
-          <Box className={classes.chatBox} ref={currWindow}>
+          <Box className={classes.chatBox} {...{ ref: currWindow } as any }>
             <Grid container className={classes.chatContainer}>
               {msgs.length > 0 &&
-                msgs.map((m) => (
+                msgs.map((m: any) => (
                   <Grid
                     key={m._id}
                     item
@@ -95,9 +96,8 @@ export default function Chat() {
                     ref={fieldRef}
                   >
                     <Paper
-                      className={`${classes.paper} ${
-                        m.from === userId ? classes.backgroundPrimary : null
-                      }`}
+                      className={`${classes.paper} ${m.from === userId ? classes.backgroundPrimary : null
+                        }`}
                       style={{
                         marginLeft: m.from === userId ? "auto" : "0",
                       }}
@@ -125,6 +125,7 @@ export default function Chat() {
                   </Grid>
                 ))}
             </Grid>
+            <ScrollToBottom lastId={fieldRef} target={currWindow} />
           </Box>
           <Grid className={classes.sendMsg}>
             <ChatBar user={user} />
@@ -133,4 +134,6 @@ export default function Chat() {
       </Grid>
     </Box>
   );
-}
+};
+
+export default Chat;

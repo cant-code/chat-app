@@ -7,7 +7,14 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useSnackbar from "../../hooks/SnackbarHook";
 
-export default function FormDialog({ open, handleModal, type, setUsers }) {
+interface DialogProp {
+  open: boolean;
+  handleModal: (type: string) => void;
+  type: string;
+  setUsers: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+const FormDialog: React.FC<DialogProp> = ({ open, handleModal, type, setUsers }) => {
   const [name, setName] = useState("");
   const { setMsg } = useSnackbar();
 
@@ -16,7 +23,7 @@ export default function FormDialog({ open, handleModal, type, setUsers }) {
     handleModal("");
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const send = JSON.stringify({
       type: type,
@@ -33,7 +40,7 @@ export default function FormDialog({ open, handleModal, type, setUsers }) {
     const res = await fetch("/api/group/room/", requestOptions);
     const data = await res.json();
     if (res.status === 200) {
-      setUsers((m) => [...m, data]);
+      setUsers((m: any) => [...m, data]);
       setMsg("Successfully created room", "success");
       closeDialog();
     } else setMsg(data.error, "error");
@@ -73,3 +80,5 @@ export default function FormDialog({ open, handleModal, type, setUsers }) {
     </Dialog>
   );
 }
+
+export default FormDialog;
