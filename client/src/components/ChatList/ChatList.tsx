@@ -8,9 +8,9 @@ import Box from "@material-ui/core/Box";
 import { AppBar, useStyles } from "./ChatList.style";
 
 interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
+  children: React.ReactNode;
+  index: number;
+  value: number;
   className: any;
 }
 
@@ -24,7 +24,7 @@ const IconLabelTabs: React.FC = () => {
   const [value, setValue] = React.useState<number>(0);
   const [loader, setLoader] = React.useState<boolean>(true);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setLoader(true);
     setValue(newValue);
   };

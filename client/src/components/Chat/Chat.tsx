@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
@@ -5,7 +6,7 @@ import { useStyles } from "./Chat.style";
 import Avatar from "@material-ui/core/Avatar";
 import ForumIcon from "@material-ui/icons/Forum";
 import Typography from "@material-ui/core/Typography";
-import Box, { BoxProps } from "@material-ui/core/Box";
+import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import ChatBar from "../ChatBar/ChatBar";

@@ -22,6 +22,13 @@ interface ListWrapperProps {
   setLoader: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface UserType {
+  _id: string;
+  username: string;
+  email: string;
+  error?: string;
+}
+
 const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoader }) => {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -30,8 +37,8 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
   const { setOpen } = useContext(SidebarContext);
   const list = currSelected;
   const [selected, setSelected] = useState(user.id);
-  const [users, setUsers] = useState<any[]>([]);
-  const [online, setOnline] = useState<any[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [online, setOnline] = useState<string[]>([]);
   const socket = useContext(SocketContext);
   const [open, setModal] = useState(false);
   const [dialogType, setDialog] = useState("");
@@ -63,7 +70,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
       };
       try {
         const res = await fetch(url, requestOptions);
-        const data = await res.json();
+        const data: UserType[] = await res.json();
         setUsers(data);
       } catch (e) {}
       setLoader(false);
@@ -73,12 +80,13 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
   }, [list, setLoader]);
 
   useEffect(() => {
-    socket.on("users", (body: any) => {
+    socket.on("users", (body: UserType) => {
       setUsers(d => [...d, body]);
     });
-    socket.on("userlist", (body: any) => {
+    socket.on("userlist", (body: string[]) => {
       setOnline(body);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -135,7 +143,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
             </React.Fragment>
           )}
           {users.length > 0 &&
-            users.map((item: any) => (
+            users.map((item: UserType) => (
               <React.Fragment key={item._id}>
                 <ListItem
                   button

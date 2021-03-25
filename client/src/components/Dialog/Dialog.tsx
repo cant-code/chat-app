@@ -6,12 +6,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useSnackbar from "../../hooks/SnackbarHook";
+import { UserType } from '../ListWrapper/ListWrapper';
 
 interface DialogProp {
   open: boolean;
   handleModal: (type: string) => void;
   type: string;
-  setUsers: React.Dispatch<React.SetStateAction<any[]>>;
+  setUsers: React.Dispatch<React.SetStateAction<UserType[]>>;
 }
 
 const FormDialog: React.FC<DialogProp> = ({ open, handleModal, type, setUsers }) => {
@@ -38,12 +39,12 @@ const FormDialog: React.FC<DialogProp> = ({ open, handleModal, type, setUsers })
       body: send,
     };
     const res = await fetch("/api/group/room/", requestOptions);
-    const data = await res.json();
+    const data: UserType = await res.json();
     if (res.status === 200) {
-      setUsers((m: any) => [...m, data]);
+      setUsers((m: UserType[]) => [...m, data]);
       setMsg("Successfully created room", "success");
       closeDialog();
-    } else setMsg(data.error, "error");
+    } else setMsg(data.error!, "error");
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -32,7 +32,7 @@ export default function ButtonAppBar() {
 
   const logout = () => {
     socket.close();
-    setUser({});
+    setUser({id: "", username: "", type: ""});
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     history.push("/login");

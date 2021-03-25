@@ -18,6 +18,11 @@ import IconButton from "@material-ui/core/IconButton";
 import { useStyles } from "./Form.style";
 import useSnackbar from "../hooks/SnackbarHook";
 
+interface bodyType {
+  username: string;
+  password: string;
+}
+
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
@@ -27,13 +32,14 @@ export default function Login() {
     password: "",
   };
 
-  const [body, setBody] = useState(initialBodyState);
-  const [formErrors, setFormErrors] = useState(initialBodyState);
-  const [showPassword, setShowPassword] = useState(false);
-  const [validation, setValidation] = useState(false);
+  const [body, setBody] = useState<bodyType>(initialBodyState);
+  const [formErrors, setFormErrors] = useState<bodyType>(initialBodyState);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [validation, setValidation] = useState<boolean>(false);
 
   useEffect(() => {
     if (localStorage.getItem("token")) history.push("/");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

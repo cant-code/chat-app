@@ -1,8 +1,8 @@
 import React, { SetStateAction, useState } from "react";
 
 interface SideBar {
-  open: {};
-  setOpen: React.Dispatch<SetStateAction<{}>>;
+  open: boolean;
+  setOpen: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export const SidebarContext = React.createContext<SideBar>({
@@ -10,8 +10,8 @@ export const SidebarContext = React.createContext<SideBar>({
   setOpen: () => {},
 });
 
-const SidebarProvider: React.FC<{children: any}> = ({ children }) => {
-  const [open, setOpen] = useState({});
+const SidebarProvider: React.FC = ({ children }) => {
+  const [open, setOpen] = useState(true);
 
   return (
     <SidebarContext.Provider value={{ open, setOpen }}>

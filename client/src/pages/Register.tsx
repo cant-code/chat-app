@@ -18,26 +18,34 @@ import IconButton from "@material-ui/core/IconButton";
 import { useStyles } from "./Form.style";
 import useSnackbar from "../hooks/SnackbarHook";
 
+interface bodyType {
+  email: string;
+  username: string;
+  password: string;
+  password2: string;
+}
+
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
   const { setMsg } = useSnackbar();
 
-  const initialBodyState = {
+  const initialBodyState: bodyType = {
     email: "",
     username: "",
     password: "",
     password2: "",
   };
 
-  const [body, setBody] = useState(initialBodyState);
-  const [formErrors, setFormErrors] = useState(initialBodyState);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [validating, setValidate] = useState(false);
+  const [body, setBody] = useState<bodyType>(initialBodyState);
+  const [formErrors, setFormErrors] = useState<bodyType>(initialBodyState);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [validating, setValidate] = useState<boolean>(false);
 
   useEffect(() => {
     if (localStorage.getItem("token")) history.push("/");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -78,7 +86,7 @@ export default function Login() {
     setFormErrors(initialBodyState);
     const email = /.+@.+\..+/;
     const pass = /^\S{6,}$/;
-    const errors = { email: "", username: "", password: "", password2: "" };
+    const errors: bodyType = { email: "", username: "", password: "", password2: "" };
     if (!email.test(body.email)) errors.email = "Please enter a valid email";
     if (body.username.length === 0) errors.username = "This field is required";
     if (!pass.test(body.password))
