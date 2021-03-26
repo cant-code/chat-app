@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext, useRef } from "react";
+import { Howl } from 'howler';
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { useStyles } from "./Chat.style";
@@ -13,6 +14,16 @@ import ChatBar from "../ChatBar/ChatBar";
 import ScrollToBottom from '../ScrollToBottom/ScrollToBottom';
 import { ChatContext, User } from "../../context/chat";
 import SocketContext from "../../context/socket";
+import ringtone from '../../sounds/ting.mp3';
+
+interface MessageBody {
+  body: string;
+  conversation: string;
+  date: string;
+  from: string;
+  to: string;
+  _id: string;
+}
 
 const Chat: React.FC = () => {
   const classes = useStyles();
@@ -20,17 +31,22 @@ const Chat: React.FC = () => {
   const clientId = useRef<User>();
   clientId.current = user;
   const socket = useContext(SocketContext);
-  const [msgs, setMsgs] = useState<string[]>([]);
+  const [msgs, setMsgs] = useState<MessageBody[]>([]);
   const userId = localStorage.getItem("id");
   const fieldRef = useRef<HTMLDivElement>(null);
   const currWindow = useRef<HTMLDivElement>(null);
+
+  const tone = new Howl({
+    src: [ringtone],
+    preload: true
+  });
 
   useEffect(() => {
     socket.emit("clientInfo", { id: localStorage.getItem("id") });
   }, []);
 
   useEffect(() => {
-    socket.on("messages", (body: any) => {
+    socket.on("messages", (body: MessageBody) => {
       if (
         clientId!.current!.id === body?.from ||
         localStorage.getItem("id") === body.from ||
@@ -38,6 +54,9 @@ const Chat: React.FC = () => {
       ) {
         setMsgs((m) => [...m, body]);
         handleScroll();
+      }
+      if (body.from !== localStorage.getItem('id')) {
+        tone.play();
       }
     });
   }, [clientId]);

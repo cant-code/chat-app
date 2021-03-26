@@ -13,6 +13,7 @@ import SocketContext, { socket } from './context/socket';
 import ChatProvider from './context/chat';
 import SidebarProvider from './context/sidebar';
 import SnackbarProvider from './context/snackbar';
+import MessageProvider from './context/messages';
 
 const theme = createMuiTheme({
   palette: {
@@ -32,14 +33,16 @@ function App() {
         <ChatProvider>
           <SidebarProvider>
             <SnackbarProvider>
-              <CssBaseline/>
-              <Router history={history}>
-                <Switch>
-                  <Route path='/login' exact component={Login} />
-                  <Route path='/register' exact component={Register} />
-                  <PrivateRoute path='/' component={Home} />
-                </Switch>
-              </Router>
+              <MessageProvider>
+                <CssBaseline/>
+                <Router history={history}>
+                  <Switch>
+                    <Route path='/login' exact component={Login} />
+                    <Route path='/register' exact component={Register} />
+                    <PrivateRoute path='/' component={Home} />
+                  </Switch>
+                </Router>
+              </MessageProvider>
             </SnackbarProvider>
           </SidebarProvider>
         </ChatProvider>
