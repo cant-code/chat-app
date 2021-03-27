@@ -9,3 +9,13 @@ body {
   border-radius: 15px;
   background-color: #00bcd4;
 }
+
+@media only screen and (max-width: 540px) {
+  html,
+  body {
+    height: 100% !important;
+  }
+  .app {
+    height: 100% !important;
+  }
+}

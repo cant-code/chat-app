@@ -14,6 +14,7 @@ import Dialog from "../Dialog/Dialog";
 import SocketContext from "../../context/socket";
 import { ChatContext } from "../../context/chat";
 import { SidebarContext } from "../../context/sidebar";
+import { MessageContext } from '../../context/messages';
 import { useStyles, ListItem, Avatar, StyledBadge } from "./ListWrapper.style";
 
 interface ListWrapperProps {
@@ -35,6 +36,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
   const classes = useStyles();
   const { user, setUser } = useContext(ChatContext);
   const { setOpen } = useContext(SidebarContext);
+  const { msgCount, setMsgCount } = useContext(MessageContext);
   const list = currSelected;
   const [selected, setSelected] = useState(user.id);
   const [users, setUsers] = useState<UserType[]>([]);
@@ -52,6 +54,8 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
     if (user.type === "group") {
       socket.emit("endgroup", id);
     }
+    const res = msgCount.filter(el => el.id !== id);
+    setMsgCount(res);
     let type = list === 0 ? "chat" : "group";
     setSelected(id);
     setUser({ id, username, type });
@@ -88,6 +92,12 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const getNoMsg = (id: string) => {
+    const res = msgCount.find(el => el.id === id);
+    if (res === undefined) return false;
+    return res.count;
+  }
 
   return (
     <div className={classes.root}>
@@ -168,6 +178,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({ currSelected, loader, setLoad
                     )}
                   </ListItemAvatar>
                   {item.username && <ListItemText primary={item.username} />}
+                  {getNoMsg(item._id)}
                 </ListItem>
                 <Divider />
               </React.Fragment>

@@ -13,6 +13,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import ChatBar from "../ChatBar/ChatBar";
 import ScrollToBottom from '../ScrollToBottom/ScrollToBottom';
 import { ChatContext, User } from "../../context/chat";
+import { MessageContext } from '../../context/messages';
 import SocketContext from "../../context/socket";
 import ringtone from '../../sounds/ting.mp3';
 
@@ -28,6 +29,7 @@ interface MessageBody {
 const Chat: React.FC = () => {
   const classes = useStyles();
   const { user } = useContext(ChatContext);
+  const { msgCount, setMsgCount } = useContext(MessageContext);
   const clientId = useRef<User>();
   clientId.current = user;
   const socket = useContext(SocketContext);
@@ -57,6 +59,13 @@ const Chat: React.FC = () => {
       }
       if (body.from !== localStorage.getItem('id')) {
         tone.play();
+        let temp = msgCount;
+        const loc= temp.findIndex( val => val.id === body.from);
+        if (loc === -1) temp.push({ id: body.from, count: 1 });
+        else {
+          temp = [...temp.slice(0, loc), { id: temp[loc].id, count: temp[loc].count++ }, ...temp.splice(loc + 1)];
+        }
+        setMsgCount(temp);
       }
     });
   }, [clientId]);

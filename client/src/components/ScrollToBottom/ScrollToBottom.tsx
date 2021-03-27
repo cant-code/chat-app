@@ -14,12 +14,12 @@ const ScrollToBottom: React.FC<Scroll> = ({ lastId, target }) => {
   const classes = useStyles();
 
   const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: -100,
+    disableHysteresis: false,
+    threshold: 1000,
     target: target.current ? target.current : window,
   });
 
-  const handleClick = (event: React.MouseEvent) => {
+  const handleClick = (_event: React.MouseEvent) => {
     lastId?.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   };
 
