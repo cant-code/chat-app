@@ -13,9 +13,9 @@ body {
 @media only screen and (max-width: 540px) {
   html,
   body {
-    height: 100% !important;
+    height: 90% !important;
   }
   .app {
-    height: 100% !important;
+    height: 90% !important;
   }
 }
