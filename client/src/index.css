@@ -15,7 +15,7 @@ body {
   body {
     height: 90% !important;
   }
-  .app {
+  #root {
     height: 90% !important;
   }
 }

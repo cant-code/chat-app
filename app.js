@@ -28,7 +28,7 @@ const io = require('socket.io')(server);
 
 io.on("connection", (socket) => {
     socket.on('clientInfo', (data) => {
-        clients[data.id] = socket.id;
+        clients[data.id ?? JSON.parse(data).id] = socket.id;
         io.emit("userlist", Object.keys(clients));
     });
     socket.on('disconnect', () => {
